@@ -132,6 +132,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const frame = $('frame'), view = $('view');
+  if (location.search) frame.src = 'banner.html' + location.search;
   const send = msg => { try { frame.contentWindow.postMessage(Object.assign({console: true}, msg), '*'); } catch (e) {} };
 
   // the view settles in once the banner reports in (with a fallback so it never stays hidden)

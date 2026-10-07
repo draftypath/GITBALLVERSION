@@ -18,6 +18,7 @@
      note:  "Your own thank-you line for this sponsor"
      size:  1.2                makes this sponsor's logo card larger (or 0.9 smaller) on
                                its own slide — handy for very thin, wide wordmarks
+     extra: 5                  keeps this sponsor's slide up 5 seconds longer than its tier
 
    TIERS
      The first tier is the headline sponsor (largest, in gold).
@@ -26,7 +27,10 @@
      Add a tier by copying one of the blocks below.
 
    FATHER & DAUGHTER PAINTINGS
-     Four paintings rotate, one per full loop of the slideshow. They live in
+     Set  paintings: true  below to show them on the overview, or false for the
+     overview without them (the Rotary crest stays on the left). To compare without editing,
+     add ?paintings or ?nopaintings to the end of the address.
+     Four paintings rotate, one per full loop of the slideshow, starting with couple-2. They live in
      assets/ and are listed in index.html (search for "couples") — adding one
      needs its size, the top of dad's head and the candle flame positions, so
      that's a job for whoever set this up rather than a quick edit.
@@ -39,6 +43,10 @@
 const BANNER = {
   event:   "The Father–Daughter Ball",
   message: "to the generous sponsors who made this evening possible",
+
+  // the father & daughter paintings on the overview. false = the overview without
+  // them: the Rotary crest on the left, the message beside it
+  paintings: false,
 
   hostKicker: "Proudly hosted by",
   host:       "Rotary Club of Vernon Silver Star",
@@ -76,7 +84,7 @@ const BANNER = {
         { name: "Elephant Storage Centre",             logo: "logos/elephant-storage-centre.png" },
         { name: "Oopsie Daisy Flowers",                logo: "logos/oopsie-daisy-flowers.png" },
         { name: "Cotton’s Chocolates",            logo: "logos/cottons-chocolates.png", tile: "#26150e" },
-        { name: "Hadwin’s HVAC, Plumbing & Electrical", logo: "logos/hadwins.png" },
+        { name: "Hadwin’s HVAC, Plumbing & Electrical", logo: "logos/hadwins.png", size: 1.16, extra: 5 },
         { name: "Nixon Earthworks",                    logo: "logos/nixon-earthworks.png" },
         { name: "Bassani Tech",                        logo: "logos/bassani-tech.png", tile: "#140b0e" },
         { name: "Spallumcheen Golf & Country Club",    logo: "logos/spallumcheen-golf.png" },

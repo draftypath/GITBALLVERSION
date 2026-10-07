@@ -75,6 +75,8 @@
   .hb-motto{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:22px;color:var(--gold-deep)}
   [data-theme=midnight] .host-bar .seal{box-shadow:0 0 0 1px #d9b46c,0 0 0 4px rgba(20,22,36,.9),0 0 0 5px rgba(216,178,110,.8),0 8px 20px rgba(0,0,0,.45)}
   .still .couple,.still .host-pos,.still .host-bar{transition:none}
+  /* without the paintings, every slide shares one composition: garland, centred message, Rotary sign-off */
+  .nopaint #couple{display:none !important}
 
   /* ---------- message column (designed at 1040 × 800, scaled to fit) ---------- */
   .content{
@@ -465,8 +467,8 @@ const ASSETS = {
   // completes a full loop. All three share the same table, so one set of candle flames serves.
   // [file, image width, image height, top of dad's hair, candle flames [x,y,size] in image pixels]
   couples: [
-    { src: "assets/couple-1.webp", w: 1530, h: 1021, head: 199, candles: [[60,491,2.6],[300,562,2.2],[240,625,1.7],[60,640,1.45],[470,615,1.5],[786,604,1.55]] },
     { src: "assets/couple-2.webp", w: 1536, h: 1024, head: 188, candles: [[51,490,2.6],[310,552,2.2],[253,620,1.7],[62,666,1.45],[470,612,1.5],[791,605,1.55]] },
+    { src: "assets/couple-1.webp", w: 1530, h: 1021, head: 199, candles: [[60,491,2.6],[300,562,2.2],[240,625,1.7],[60,640,1.45],[470,615,1.5],[786,604,1.55]] },
     { src: "assets/couple-3.webp", w: 1448, h: 1081, head: 183, candles: [[64,515,2.6],[296,572,2.2],[245,628,1.7],[50,650,1.45],[462,640,1.5],[793,597,1.55]] },
     { src: "assets/couple-4.webp", w: 1448, h: 1086, head: 173, candles: [[62,550,2.6],[303,582,2.2],[238,642,1.7],[58,691,1.45],[458,648,1.5],[784,624,1.55]] },
   ],
@@ -481,6 +483,11 @@ const ASSETS = {
 <script>
 (() => {
   const STILL = /[?&]still\b/.test(location.search);
+  // the father & daughter paintings on the overview can be switched off (sponsors.js: paintings: false,
+  // or ?paintings / ?nopaintings on the address to compare)
+  const QP = new URLSearchParams(location.search);
+  const PAINTINGS = QP.has('paintings') ? true : QP.has('nopaintings') ? false : (BANNER.paintings !== false);
+  if (!PAINTINGS) document.documentElement.classList.add('nopaint');
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
   const EMBED = window.self !== window.top;
   if (EMBED) document.body.classList.add('embed');
@@ -592,7 +599,7 @@ const ASSETS = {
     const cs = getComputedStyle(sep);
     const sw = sep.offsetWidth + parseFloat(cs.marginLeft) + parseFloat(cs.marginRight);
     row.textContent = '';
-    const maxW = box.clientWidth * (r.gild ? 1 : 1.13);   // list lines may run a little wider than the column
+    const maxW = box.clientWidth * (r.gild ? 1 : PAINTINGS ? 1.13 : 1.13);   // three tapered lines read best, with or without the paintings   // list lines may run a little wider than the column
     const greedy = W => {
       const lines = [[]]; let cur = 0;
       w.forEach((x, i) => {
@@ -618,7 +625,7 @@ const ASSETS = {
     let s = .82, h = .74;
     const apply = () => { stage.style.setProperty('--s', s); stage.style.setProperty('--h', h); rows.forEach(layoutRow); };
     const need  = () => [...box.children].reduce((t, c) => t + c.offsetHeight, 0) + (box.children.length - 1) * 40 * s;
-    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : 1.15) + 1);
+    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : PAINTINGS ? 1.15 : 1.15) + 1);
     for (h of [.74, .66, .58]){
       s = .82; apply();
       while (!fits() && s > .7){ s -= .03; apply(); }
@@ -691,11 +698,12 @@ const ASSETS = {
     const q = portrait ? Math.min(.72 * W / CPL.w, .42 * H / CPL.h) : k * 460 / CPL.h * 1.0;
     const cw = CPL.w * q, ch = CPL.h * q;
     $('couple').style.width = cw + 'px';
-    const headTop = H - (CPL.h - COUPLES[coupleIx].head) * q;   // top of dad's hair
+    const headTop = PAINTINGS ? H - (CPL.h - COUPLES[coupleIx].head) * q : H - 40 * k;   // top of dad's hair (or the floor)
+    const CREST_X = 415 * k;                       // without the paintings, the Rotary crest owns the left column
 
     // message column
-    const xL0 = portrait ? 24 * k : cw + 12 * k;
-    const xR0 = portrait ? W - 24 * k : W - 120 * k;
+    const xL0 = portrait ? 24 * k : PAINTINGS ? cw + 12 * k : CREST_X + 230 * k;
+    const xR0 = portrait ? W - 24 * k : PAINTINGS ? W - 120 * k : W - 110 * k;
     const bottom = portrait ? H - ch - 12 * k : H - 38 * k;
     const gap = 14 * Math.max(k, .4);
     const hang = 0;                                // text sits just below the vine tips, never under them
@@ -705,7 +713,7 @@ const ASSETS = {
     let c, left, rt, top, xL = xL0, xR = xR0;
     // try a few horizontal positions and keep the one that lets the column sit highest
     let bestPos = null;
-    for (const shift of (portrait ? [0] : [0, -40, -80, -120, 40])){
+    for (const shift of (portrait || !PAINTINGS ? [0] : [0, -40, -80, -120, 40])){
       xL = xL0 + shift; xR = xR0 + shift;
     c = Math.min((xR - xL) / 1040, (xR - xL + overhang) / (maxX - minX), k * 1.12); left = 0; rt = 0; top = 0;
     for (let i = 0; i < 60; i++){
@@ -759,12 +767,13 @@ const ASSETS = {
       // clear of the vines and the text, and the closest to that centre line
       const placed = shapes.map(sh => ({x0: left + sh.x0 * c, y0: top + sh.y0 * c, y1: top + sh.y1 * c}));
       const th = shapes.find(sh => sh.tag === 'thanks');
-      const mid = top + (th.y0 + th.y1) / 2 * c;
-      const home = .78 * cw;
+      // with the paintings the crest lines up with "Thank You"; without them it balances the whole message
+      const mid = PAINTINGS ? top + (th.y0 + th.y1) / 2 * c : top + (Math.min(...shapes.map(s => s.y0)) + Math.max(...shapes.map(s => s.y1))) / 2 * c;
+      const home = PAINTINGS ? .78 * cw : CREST_X;
       let best = null;
-      for (let f = 0; f <= 1.0001; f += .05){
+      for (let f = 0; f <= (PAINTINGS ? 1.0001 : 0); f += .05){
         const cx = home + f * (xL + 60 * k - home);
-        let z = k, x, y, ok = false;
+        let z = PAINTINGS ? k : 1.15 * k, x, y, ok = false;   // a touch larger when it has the column to itself
         for (let i = 0; i < 50 && z > .35 * k && !ok; i++){
           x = cx - 170 * z;
           const floor = headTop - 24 * k - hh * z;                 // resting just above dad's head…
@@ -964,6 +973,15 @@ const ASSETS = {
     if (ANIMATE) requestAnimationFrame(draw);
   }
 
+  /* ---- a long sponsor name stays on one line rather than wrapping to two ---- */
+  function flattenNames(){
+    document.querySelectorAll('.slide.sponsor .sp-name').forEach(n => {
+      n.style.whiteSpace = 'nowrap'; n.style.maxWidth = 'none';
+      const room = 1000, w = n.scrollWidth;
+      if (w > room) n.style.fontSize = (parseFloat(getComputedStyle(n).fontSize) * Math.max(.72, room / w)) + 'px';
+    });
+  }
+
   /* ---- very short, wide logos (e.g. a one-line wordmark) leave "Thank You" stranded above a lot of
      empty space; on those slides it joins the centred group, at the same gap the other slides use ---- */
   function snugShortLogos(){
@@ -1028,7 +1046,7 @@ const ASSETS = {
     const note = document.createElement('p'); note.className = 'sp-note'; note.textContent = sp.note || NOTES[t.kind] || ''; body.appendChild(note);
     content.appendChild(el);
     const tierKey = /gold/i.test(t.tier || '') ? 'gold' : /royal/i.test(t.tier || '') ? 'royal' : /silver/i.test(t.tier || '') ? 'silver' : t.kind;
-    slides.push({el, secs: T[tierKey] || T[t.kind] || 8, label: sp.name});
+    slides.push({el, secs: (T[tierKey] || T[t.kind] || 8) + (+sp.extra || 0), label: sp.name});   // optional "extra" seconds in sponsors.js
   }
   let cur = 0, timer = 0, paused = false, frameT = 0;
   const qs = new URLSearchParams(location.search);
@@ -1059,11 +1077,11 @@ const ASSETS = {
   // the next painting is fetched while the last sponsor slide fades, then swapped in while hidden
   let pre = null;
   function preloadNextCouple(){
-    if (COUPLES.length < 2) return;
+    if (!PAINTINGS || COUPLES.length < 2) return;
     pre = new Image(); pre.src = COUPLES[(coupleIx + 1) % COUPLES.length].src;
   }
   function swapCouple(){
-    if (COUPLES.length < 2) return;
+    if (!PAINTINGS || COUPLES.length < 2) return;
     const ix = (coupleIx + 1) % COUPLES.length;
     setCouple(ix); $('coupleArt').src = COUPLES[ix].src;
     place();
@@ -1111,7 +1129,7 @@ const ASSETS = {
                  ...['topArt', 'coupleArt', 'logo'].map(id => $(id).decode ? $(id).decode().catch(() => {}) : null),
                  ...logoLoads];
   Promise.all(ready).then(() => {
-    fitSponsors(); measure(); place(); snugShortLogos();
+    fitSponsors(); flattenNames(); measure(); place(); snugShortLogos();
     if (ANIMATE) requestAnimationFrame(draw);
     const start = parseInt(qs.get('slide') || '0', 10) || 0;
     if (start) { slides[0].el.classList.remove('on'); cur = start % slides.length; slides[cur].el.classList.add('on'); applyFrame(); stage.classList.toggle('sp', cur !== 0); }
