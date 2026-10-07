@@ -50,7 +50,7 @@
   .piece{position:absolute;pointer-events:none;user-select:none}
   .piece > img, .piece > canvas{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-drag:none}
   .garland{top:0;aspect-ratio:1908/602}
-  .couple{left:0;bottom:0;aspect-ratio:var(--cr,1530/1021)}
+  .couple{left:0;bottom:0;aspect-ratio:var(--cr,1249/1182)}
 
   .halo,.glow{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
   .halo{width:48%;aspect-ratio:1;background:radial-gradient(closest-side, rgba(255,205,118,.40), rgba(255,205,118,0))}
@@ -77,6 +77,10 @@
   .still .couple,.still .host-pos,.still .host-bar{transition:none}
   /* without the paintings, every slide shares one composition: garland, centred message, Rotary sign-off */
   .nopaint #couple{display:none !important}
+  /* with the paintings, Rotary signs off along the bottom of the overview too; the message leaves room for it */
+  .paintbar #hostPos{display:none !important}
+  .paintbar .host-bar{opacity:1 !important}
+  .paintbar #stage:not(.sp) .host-bar{left:var(--ov-left,0)}
 
   /* ---------- message column (designed at 1040 × 800, scaled to fit) ---------- */
   .content{
@@ -394,7 +398,7 @@
   </div>
 
   <div class="piece couple" id="couple">
-    <div class="halo" style="left:14%;top:58%"></div>
+    <div class="halo" style="left:12%;top:42%"></div>
     <img id="coupleArt" alt="">
     <canvas id="cDim"   width="1601" height="1053" style="mix-blend-mode:multiply"></canvas>
     <canvas id="cBloom" width="1601" height="1053" style="mix-blend-mode:screen"></canvas>
@@ -467,10 +471,9 @@ const ASSETS = {
   // completes a full loop. All three share the same table, so one set of candle flames serves.
   // [file, image width, image height, top of dad's hair, candle flames [x,y,size] in image pixels]
   couples: [
-    { src: "assets/couple-2.webp", w: 1536, h: 1024, head: 188, candles: [[51,490,2.6],[310,552,2.2],[253,620,1.7],[62,666,1.45],[470,612,1.5],[791,605,1.55]] },
-    { src: "assets/couple-1.webp", w: 1530, h: 1021, head: 199, candles: [[60,491,2.6],[300,562,2.2],[240,625,1.7],[60,640,1.45],[470,615,1.5],[786,604,1.55]] },
-    { src: "assets/couple-3.webp", w: 1448, h: 1081, head: 183, candles: [[64,515,2.6],[296,572,2.2],[245,628,1.7],[50,650,1.45],[462,640,1.5],[793,597,1.55]] },
-    { src: "assets/couple-4.webp", w: 1448, h: 1086, head: 173, candles: [[62,550,2.6],[303,582,2.2],[238,642,1.7],[58,691,1.45],[458,648,1.5],[784,624,1.55]] },
+    { src: "assets/pair-1.webp", w: 1249, h: 1182, head: 0, height: 640, crestAt: .42, top: [423,316,315,315,314,318,314,227,234,251,254,287,268,260,254,283,251,234,231,230,228,226,223,221,219,214,203,193,187,111,42,27,18,13,6,1,1,3,3,7,12,23,36,45,71,413,414,273,248,218,205,194,185,180,180,179,180,184,192,203,213,239,260,282,324,395,413,424,482,477,474,470,467,467,467,468,468,469,1182], candles: [[115,470,1.1]] },
+    { src: "assets/pair-2.webp", w: 1290, h: 1153, head: 0, height: 640, crestAt: .42, top: [395,377,287,287,289,289,297,299,207,209,229,233,265,245,234,231,258,226,216,216,214,211,209,206,204,202,198,190,182,176,168,84,39,23,15,13,3,1,1,4,10,24,32,44,292,388,388,389,188,164,156,142,134,134,135,134,135,142,154,165,188,217,219,233,339,338,345,363,371,448,450,446,443,440,437,436,436,436,439,438,443], candles: [[130,455,1.1]] },
+    { src: "assets/pair-3.webp", w: 1241, h: 1184, head: 0, height: 640, crestAt: .42, top: [427,325,323,326,322,328,332,236,247,257,268,300,275,268,264,285,252,240,239,237,236,234,231,226,176,131,113,104,88,75,43,31,18,11,11,6,0,0,7,16,19,35,41,59,311,421,421,243,218,204,194,186,184,179,178,176,181,185,192,203,224,262,270,327,391,404,420,493,488,483,479,476,474,473,474,476,474,478], candles: [[115,470,1.1]] },
   ],
   logo:   "assets/rotary.png",
   // garland art: bright bulbs / candle flames [x, y, size] in its own pixels
@@ -488,6 +491,7 @@ const ASSETS = {
   const QP = new URLSearchParams(location.search);
   const PAINTINGS = QP.has('paintings') ? true : QP.has('nopaintings') ? false : (BANNER.paintings !== false);
   if (!PAINTINGS) document.documentElement.classList.add('nopaint');
+  if (PAINTINGS) document.documentElement.classList.add('paintbar');
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
   const EMBED = window.self !== window.top;
   if (EMBED) document.body.classList.add('embed');
@@ -695,16 +699,16 @@ const ASSETS = {
     Object.assign($('garland').style, {left: '0px', top: G.y + 'px', width: W + 'px'});
 
     // father & daughter: bottom-left corner
-    const q = portrait ? Math.min(.72 * W / CPL.w, .42 * H / CPL.h) : k * 460 / CPL.h * 1.0;
+    const q = portrait ? Math.min(.72 * W / CPL.w, .42 * H / CPL.h) : k * (COUPLES[coupleIx].height || 460) / CPL.h;
     const cw = CPL.w * q, ch = CPL.h * q;
     $('couple').style.width = cw + 'px';
     const headTop = PAINTINGS ? H - (CPL.h - COUPLES[coupleIx].head) * q : H - 40 * k;   // top of dad's hair (or the floor)
     const CREST_X = 415 * k;                       // without the paintings, the Rotary crest owns the left column
 
     // message column
-    const xL0 = portrait ? 24 * k : PAINTINGS ? cw + 12 * k : CREST_X + 230 * k;
+    const xL0 = portrait ? 24 * k : PAINTINGS ? cw + 24 * k : CREST_X + 230 * k;
     const xR0 = portrait ? W - 24 * k : PAINTINGS ? W - 120 * k : W - 110 * k;
-    const bottom = portrait ? H - ch - 12 * k : H - 38 * k;
+    const bottom = portrait ? H - ch - 12 * k : PAINTINGS ? H - 132 * k : H - 38 * k;   // room for the sign-off bar
     const gap = 14 * Math.max(k, .4);
     const hang = 0;                                // text sits just below the vine tips, never under them
     // widest line (the shared sponsor row may reach past the 1040px column)
@@ -749,6 +753,9 @@ const ASSETS = {
       if (!isFinite(stop) || !isFinite(sc) || !isFinite(sleft)){ sc = .85; sleft = W / 2 - 520 * sc; stop = 200; }
       SP = {left: sleft, top: stop, c: sc};
     } else SP = OV;
+    // the sign-off bar centres on the message column on the overview, and on the whole stage on sponsor slides
+    const bar = $('hostBar');
+    bar.style.setProperty('--ov-left', (PAINTINGS && !portrait ? xL : 0) + 'px');
     applyFrame();
     content.style.visibility = 'visible';
 
@@ -769,14 +776,24 @@ const ASSETS = {
       const th = shapes.find(sh => sh.tag === 'thanks');
       // with the paintings the crest lines up with "Thank You"; without them it balances the whole message
       const mid = PAINTINGS ? top + (th.y0 + th.y1) / 2 * c : top + (Math.min(...shapes.map(s => s.y0)) + Math.max(...shapes.map(s => s.y1))) / 2 * c;
-      const home = PAINTINGS ? .78 * cw : CREST_X;
+      const home = PAINTINGS ? (COUPLES[coupleIx].crestAt != null ? COUPLES[coupleIx].crestAt : .78) * cw : CREST_X;   // crestAt: where (0–1 across the painting) the crest sits best
+      // highest point of the painted figures over a horizontal span (screen px)
+      const topUnder = (x0, x1) => {
+        const cp = COUPLES[coupleIx];
+        if (!PAINTINGS || !cp.top) return headTop;
+        const a = Math.max(0, Math.floor(x0 / q / 16)), b = Math.min(cp.top.length - 1, Math.floor(x1 / q / 16));
+        if (a > b) return H;
+        let m = Infinity; for (let i = a; i <= b; i++) m = Math.min(m, cp.top[i]);
+        return H - ch + m * q;
+      };
       let best = null;
-      for (let f = 0; f <= (PAINTINGS ? 1.0001 : 0); f += .05){
+      const pinned = PAINTINGS && COUPLES[coupleIx].crestAt != null;   // a painting that names its crest spot keeps the crest there
+      for (let f = 0; f <= (PAINTINGS && !pinned ? 1.0001 : 0); f += .05){
         const cx = home + f * (xL + 60 * k - home);
         let z = PAINTINGS ? k : 1.15 * k, x, y, ok = false;   // a touch larger when it has the column to itself
         for (let i = 0; i < 50 && z > .35 * k && !ok; i++){
           x = cx - 170 * z;
-          const floor = headTop - 24 * k - hh * z;                 // resting just above dad's head…
+          const floor = topUnder(x, x + 340 * z) - 24 * k - hh * z;   // just above the tallest head under the crest                 // resting just above dad's head…
           const ceil  = vinesBelow(x, x + 340 * z) + gap;          // …or lifted, but never into the vines
           const want = mid - hh * z / 2, ys = [];
           for (let yy = floor; yy >= ceil - .5; yy -= 6 * k) ys.push(yy);

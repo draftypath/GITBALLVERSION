@@ -30,7 +30,7 @@
      Set  paintings: true  below to show them on the overview, or false for the
      overview without them (the Rotary crest stays on the left). To compare without editing,
      add ?paintings or ?nopaintings to the end of the address.
-     Four paintings rotate, one per full loop of the slideshow, starting with couple-2. They live in
+     Three paintings rotate, one per full loop of the slideshow. They live in
      assets/ and are listed in index.html (search for "couples") — adding one
      needs its size, the top of dad's head and the candle flame positions, so
      that's a job for whoever set this up rather than a quick edit.
@@ -84,7 +84,7 @@ const BANNER = {
         { name: "Elephant Storage Centre",             logo: "logos/elephant-storage-centre.png" },
         { name: "Oopsie Daisy Flowers",                logo: "logos/oopsie-daisy-flowers.png" },
         { name: "Cotton’s Chocolates",            logo: "logos/cottons-chocolates.png", tile: "#26150e" },
-        { name: "Hadwin’s HVAC, Plumbing & Electrical", logo: "logos/hadwins.png", size: 1.16, extra: 5 },
+        { name: "Hadwin’s HVAC, Plumbing & Electrical", logo: "logos/hadwins.png", size: 1.16 },
         { name: "Nixon Earthworks",                    logo: "logos/nixon-earthworks.png" },
         { name: "Bassani Tech",                        logo: "logos/bassani-tech.png", tile: "#140b0e" },
         { name: "Spallumcheen Golf & Country Club",    logo: "logos/spallumcheen-golf.png" },

@@ -12,10 +12,8 @@ WHAT'S HERE
   sponsors.js   THE ONLY FILE YOU EDIT: sponsor names, tiers, logos, timing, wording
   logos/        one logo per sponsor (transparent PNG is best)
   assets/       artwork and fonts — leave as is
-                (couple-1 … couple-4.webp are the four father & daughter paintings;
-                 the banner moves to the next one each time the slideshow completes
-                 a full loop; they appear on the overview only — each sponsor's own
-                 slide takes the whole stage, with Rotary signing off along the bottom)
+                (pair-1 … pair-3.webp are the three father & daughter paintings; the banner
+                 moves to the next one each time the slideshow completes a full loop)
 
 Keep these together in one folder. The page loads everything by relative
 path, so it works straight from a USB stick or the desktop, no internet needed.
