@@ -241,6 +241,7 @@
   .thanks{animation-delay:5s}
 
   .measuring .chunk{transform:none !important}
+  .webkit .thanks, .webkit .gild{filter:none !important}
   .still *, .still .glow{animation:none !important;transition:none !important}
   .still .veil{display:none}
   .still .ornament path,.still .ornament line{stroke-dashoffset:0}
@@ -476,6 +477,7 @@ const ASSETS = {
 <script>
 (() => {
   const STILL = /[?&]still\b/.test(location.search);
+  if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
   const EMBED = window.self !== window.top;
   if (EMBED) document.body.classList.add('embed');
   const tellParent = msg => { if (EMBED) try { parent.postMessage(Object.assign({banner: true}, msg), '*'); } catch (e) {} };
@@ -720,7 +722,7 @@ const ASSETS = {
       // measure the tallest sponsor slide right here, so the frame always fits the real content
       const sps = [...document.querySelectorAll('.slide.sponsor')];
       sps.forEach(sl => sl.style.height = 'auto');
-      sponsorH = Math.max(...sps.map(sl => sl.scrollHeight), 400);
+      sponsorH = Math.min(860, Math.max(400, ...sps.map(sl => sl.scrollHeight || 0).filter(v => isFinite(v))));
       sps.forEach(sl => sl.style.height = sponsorH + 'px');
       let sc = Math.min((sxR - sxL) / 1040, 1.25 * k), sleft, stop;
       const floorY = H - 126 * k;                      // leave room for the Rotary sign-off bar
@@ -731,6 +733,7 @@ const ASSETS = {
         sc *= .98;
       }
       stop = Math.min(stop + Math.max(0, floorY - stop - sponsorH * sc) * .4, floorY - sponsorH * sc);
+      if (!isFinite(stop) || !isFinite(sc) || !isFinite(sleft)){ sc = .85; sleft = W / 2 - 520 * sc; stop = 200; }
       SP = {left: sleft, top: stop, c: sc};
     } else SP = OV;
     applyFrame();
@@ -972,17 +975,29 @@ const ASSETS = {
     if (t.tier){ const lab = label(t.tier.replace(/s$/i, '')); body.appendChild(lab); }   // the tier introduces the logo
     if (sp.logo){
       const pl = document.createElement('div'); pl.className = 'plaque';
-      const img = document.createElement('img'); img.alt = sp.name; img.src = sp.logo; pl.appendChild(img); body.appendChild(pl);
+      const img = document.createElement('img'); img.alt = sp.name; pl.appendChild(img); body.appendChild(pl);
       if (sp.tile) pl.style.background = sp.tile;
       const big = t.kind === 'premier';
-      logoLoads.push((img.decode ? img.decode() : Promise.resolve()).then(() => {
+      const maxW = big ? 900 : 840, maxH = big ? 400 : 370;
+      // a sensible card before the logo arrives, so nothing can ever size itself to a raw 1400px image
+      pl.style.width = maxW * .8 + 'px'; pl.style.height = maxH * .8 + 'px'; pl.style.padding = '30px';
+      const fit = () => {
+        const nw = img.naturalWidth, nh = img.naturalHeight;
+        if (!(nw > 0 && nh > 0)) return false;
         // the card takes the logo's own proportions, inside a sensible maximum
-        const maxW = big ? 900 : 840, maxH = big ? 400 : 370;
-        const k = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
-        const w = img.naturalWidth * k, hgt = img.naturalHeight * k;
+        const k = Math.min(maxW / nw, maxH / nh), w = nw * k, hgt = nh * k;
         const pad = sp.tile ? 0 : Math.max(22, Math.min(44, .09 * Math.max(w, hgt)));
         pl.style.width = (w + 2 * pad) + 'px'; pl.style.height = (hgt + 2 * pad) + 'px'; pl.style.padding = pad + 'px';
-      }).catch(() => { pl.remove(); nm.classList.add('solo'); }));
+        return true;
+      };
+      logoLoads.push(new Promise(res => {
+        const done = ok => { if (!ok){ pl.remove(); nm.classList.add('solo'); } res(); };
+        img.onload = () => done(fit() || true);
+        img.onerror = () => done(false);
+        img.src = sp.logo;
+        if (img.complete && img.naturalWidth) done(fit());
+        setTimeout(() => { fit(); res(); }, 4000);   // never hold the show up for a slow logo
+      }));
     }
     const nm = document.createElement('div'); nm.className = 'sp-name' + (sp.logo ? '' : ' solo'); nm.textContent = sp.name; body.appendChild(nm);
     const note = document.createElement('p'); note.className = 'sp-note'; note.textContent = sp.note || NOTES[t.kind] || ''; body.appendChild(note);

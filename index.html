@@ -89,6 +89,24 @@
   .where .count{font:500 .55rem/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--cream-dim);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
   .where .count em{font-style:normal;color:var(--cream-faint)}
   .paused .where .count::after{content:"  ·  Paused";color:var(--gold)}
+  /* ---------- phones and narrow windows: frame first, then a two-line toolbar under it ---------- */
+  @media (max-width:760px), (max-aspect-ratio:1/1){
+    body{place-items:center;align-content:center}
+    .panel{width:min(100%, calc((100vh - 2 * var(--gutter) - 104px) * 16 / 9))}
+    .deck{position:static;height:auto;margin-top:14px;
+      grid-template-columns:auto 1fr auto;grid-template-areas:"ticks ticks ticks" "left count right";row-gap:14px}
+    .where{display:contents}
+    .ticks{grid-area:ticks;justify-self:center;max-width:100%;flex-wrap:nowrap;overflow:hidden}
+    .where .count{grid-area:count;justify-self:center;max-width:100%}
+    .deck .left{grid-area:left}
+    .deck .right{grid-area:right}
+    .btn{height:36px;min-width:36px}
+    .btn.icon{width:36px}
+    .btn svg{width:13px;height:13px}
+    .btn.primary .lbl{display:none}
+    .btn.primary{width:36px;padding:0}
+  }
+  @media (max-width:380px){ .ticks button{width:10px} .ticks{gap:3px} }
   @media (prefers-reduced-motion:reduce){ .view{opacity:1;transform:none;transition:none} }
 </style>
 </head>
@@ -121,7 +139,7 @@
       <button class="btn icon" id="next" type="button" title="Next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
       <button class="btn primary" id="full" type="button" title="Show the banner fullscreen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-        Fullscreen
+        <span class="lbl">Fullscreen</span>
       </button>
     </div>
   </div>
@@ -158,8 +176,16 @@
   };
 
   /* ---- fullscreen: just the banner ---- */
-  const goFull = () => { if (document.fullscreenElement) document.exitFullscreen(); else (view.requestFullscreen ? view.requestFullscreen() : Promise.reject()).catch(() => {}); };
+  // iPhone Safari can't fullscreen a page element, so there the button opens the banner on its own page instead
+  const canFull = !!(view.requestFullscreen || view.webkitRequestFullscreen);
+  const goFull = () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+    if (!canFull){ location.href = 'banner.html' + (theme === 'midnight' ? '?midnight' : ''); return; }
+    const r = view.requestFullscreen ? view.requestFullscreen() : view.webkitRequestFullscreen();
+    if (r && r.catch) r.catch(() => {});
+  };
   $('full').addEventListener('click', goFull);
+  document.addEventListener('webkitfullscreenchange', () => send({cmd: 'fullscreen', value: !!document.webkitFullscreenElement}));
   document.addEventListener('fullscreenchange', () => {
     const on = !!document.fullscreenElement;
     send({cmd: 'fullscreen', value: on});
