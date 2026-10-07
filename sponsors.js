@@ -46,7 +46,7 @@ const BANNER = {
 
   // the father & daughter paintings on the overview. false = the overview without
   // them: the Rotary crest on the left, the message beside it
-  paintings: false,
+  paintings: true,
 
   hostKicker: "Proudly hosted by",
   host:       "Rotary Club of Vernon Silver Star",
