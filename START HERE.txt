@@ -1,0 +1,65 @@
+FATHER–DAUGHTER BALL · SPONSOR THANK-YOU BANNER
+HOW TO PLAY IT ON THE TV (no internet needed)
+================================================
+
+Everything the banner needs is inside this folder. Keep the folder
+together — don't move files out of it — and it will play from a laptop,
+a USB stick or the desktop with no internet connection at all.
+
+
+BEFORE THE EVENT (5 minutes, do this at home)
+---------------------------------------------
+1. Copy this whole folder onto the laptop you'll use (the desktop is fine).
+2. Open the folder and double-click   index.html
+   It should open in Chrome or Microsoft Edge. If it opens in something
+   else, right-click index.html → "Open with" → Chrome or Edge.
+3. You'll see the banner in a frame with a small row of controls under it.
+   Let it run for a minute to confirm the slides change on their own.
+4. Close it. You're ready.
+
+
+ON THE NIGHT
+------------
+1. Plug the laptop into the TV with the HDMI cable and turn the TV to
+   that HDMI input.
+2. Set the laptop to EXTEND its screen to the TV (not mirror):
+     Windows:  press  Windows key + P  → choose "Extend"
+     Mac:      System Settings → Displays → turn OFF "Mirror"
+3. Double-click  index.html  to open the banner.
+4. Drag the browser window across onto the TV.
+5. Click  Fullscreen  (bottom-right of the controls) — or press the  F  key.
+   The banner now fills the TV and runs by itself all evening.
+6. Turn on Do Not Disturb on the laptop so no pop-ups appear on the TV,
+   plug the laptop into power, and leave it.
+
+
+THE CONTROLS (if you need them)
+-------------------------------
+   F              fullscreen on / off          (Esc also exits fullscreen)
+   P              pause / resume
+   → and ←        next / previous slide        (Space also goes forward)
+   Home           jump back to the main Thank You page
+   M              switch between the cream "Evening" look and the dark
+                  "Midnight" look — pick whichever suits the room lighting.
+                  (The sun/moon icon under the banner does the same.)
+   The same keys work while fullscreen. Move the mouse and faint arrows
+   appear in the corners of the screen too.
+
+
+IF SOMETHING LOOKS WRONG
+------------------------
+• Black bars around the picture?  The TV isn't 16:9 or the window isn't
+  on the TV yet. Drag the window onto the TV and press F again.
+• Banner blank or no pictures?  A file was moved out of the folder.
+  Re-copy the whole folder from the USB stick.
+• Controls missing / only the banner shows?  You opened banner.html
+  instead of index.html. That's fine too — press F for fullscreen.
+• It opened in Safari / Internet Explorer and looks odd?  Use Chrome or
+  Edge instead.
+
+
+TO CHANGE A SPONSOR NAME OR LOGO
+--------------------------------
+Only one file is ever edited:  sponsors.js  (see README.txt for details).
+If you're not comfortable with that, send the change to whoever gave you
+this folder.
