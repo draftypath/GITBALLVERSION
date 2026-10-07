@@ -16,6 +16,8 @@
                                in — the card behind it takes that colour so the
                                edges disappear
      note:  "Your own thank-you line for this sponsor"
+     size:  1.2                makes this sponsor's logo card larger (or 0.9 smaller) on
+                               its own slide — handy for very thin, wide wordmarks
 
    TIERS
      The first tier is the headline sponsor (largest, in gold).
@@ -59,7 +61,7 @@ const BANNER = {
         { name: "A&W", logo: "logos/aw.png" },
     ]},
     { tier: "Gold Sponsor", sponsors: [
-        { name: "Nixon Wenger LLP", logo: "logos/nixon-wenger.png" },
+        { name: "Nixon Wenger LLP", logo: "logos/nixon-wenger.png", size: 1.22 },
     ]},
     { tier: "Royal Blue Sponsor", sponsors: [
         { name: "The Emily Dahl Foundation", logo: "logos/emily-dahl-foundation.png" },

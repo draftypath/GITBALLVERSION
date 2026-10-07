@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0f1712">
+<meta name="theme-color" content="#21151a">
 <meta name="color-scheme" content="dark">
 <title>Father–Daughter Ball · Sponsor Banner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
   @font-face{font-family:'Cormorant Garamond';font-weight:500;font-style:normal;font-display:swap;src:url(assets/fonts/cormorant-garamond-500.woff2) format('woff2')}
   @font-face{font-family:'Cormorant Garamond';font-weight:500;font-style:italic;font-display:swap;src:url(assets/fonts/cormorant-garamond-500-italic.woff2) format('woff2')}
   :root{
-    --ground:#2a231d;              /* Evening: a soft warm umber behind the cream banner */
+    --ground:#21151a;              /* Evening: a deep, dark burgundy behind the cream banner */
     --cream:#ede9dd;
     --cream-dim:rgba(237,233,221,.7);
     --cream-faint:rgba(237,233,221,.45);
@@ -53,7 +53,7 @@
   .view:fullscreen::after{display:none}
 
   /* ---------- the deck ---------- */
-  .deck{position:absolute;left:0;right:0;top:100%;height:var(--deck);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem}
+  .deck{position:absolute;left:0;right:0;top:100%;height:var(--deck);display:flex;justify-content:space-between;align-items:center;gap:1rem}
   .deck .left{display:flex;align-items:center;gap:.5rem;justify-self:start}
   .deck .right{display:flex;align-items:center;gap:.5rem;justify-self:end}
   .deck .right .btn.primary{margin-left:.4rem}
@@ -78,35 +78,21 @@
   .btn.ghost{box-shadow:none;color:var(--cream-dim)}
   @media (hover:hover){ .btn.ghost:hover{color:var(--cream);background:rgba(237,233,221,.06)} }
 
-  /* centre: where we are — the tick row, with a quiet count beneath it */
-  .where{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}
-  .ticks{display:flex;gap:4px;align-items:center;height:10px}
-  .ticks button{all:unset;cursor:pointer;width:14px;height:10px;display:grid;place-items:center}
-  .ticks button i{display:block;width:100%;height:2px;border-radius:2px;background:rgba(237,233,221,.28);transition:background .3s,transform .3s}
-  .ticks button[aria-current=true] i{background:var(--gold);transform:scaleY(1.6)}
-  @media (hover:hover){ .ticks button:hover i{background:rgba(237,233,221,.5)} }
-  .ticks button:focus-visible{outline:1px solid rgba(237,233,221,.55);outline-offset:2px}
-  .where .count{font:500 .55rem/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--cream-dim);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
-  .where .count em{font-style:normal;color:var(--cream-faint)}
-  .paused .where .count::after{content:"  ·  Paused";color:var(--gold)}
+  /* centre: just the name of the slide on screen, quiet */
+  .where{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:44%;pointer-events:none;
+    font:500 .58rem/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--cream-dim);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;transition:opacity .4s ease}
   /* ---------- phones and narrow windows: frame first, then a two-line toolbar under it ---------- */
   @media (max-width:760px), (max-aspect-ratio:1/1){
     body{place-items:center;align-content:center}
-    .panel{width:min(100%, calc((100vh - 2 * var(--gutter) - 104px) * 16 / 9))}
-    .deck{position:static;height:auto;margin-top:14px;
-      grid-template-columns:auto 1fr auto;grid-template-areas:"ticks ticks ticks" "left count right";row-gap:14px}
-    .where{display:contents}
-    .ticks{grid-area:ticks;justify-self:center;max-width:100%;flex-wrap:nowrap;overflow:hidden}
-    .where .count{grid-area:count;justify-self:center;max-width:100%}
-    .deck .left{grid-area:left}
-    .deck .right{grid-area:right}
+    .panel{width:min(100%, calc((100vh - 2 * var(--gutter) - 70px) * 16 / 9))}
+    .deck{position:relative;height:auto;margin-top:14px}
     .btn{height:36px;min-width:36px}
     .btn.icon{width:36px}
     .btn svg{width:13px;height:13px}
     .btn.primary .lbl{display:none}
     .btn.primary{width:36px;padding:0}
   }
-  @media (max-width:380px){ .ticks button{width:10px} .ticks{gap:3px} }
   @media (prefers-reduced-motion:reduce){ .view{opacity:1;transform:none;transition:none} }
 </style>
 </head>
@@ -129,10 +115,7 @@
       </button>
     </div>
 
-    <div class="where" aria-live="polite">
-      <div class="ticks" id="ticks" role="tablist" aria-label="Slides"></div>
-      <div class="count"><em id="count">1 / 15</em><span id="label"></span></div>
-    </div>
+    <div class="where" id="label" aria-live="polite">Overview</div>
 
     <div class="right">
       <button class="btn icon" id="prev" type="button" title="Previous" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -192,23 +175,11 @@
     if (on) frame.focus();
   });
 
-  /* ---- where we are ---- */
-  let total = 0;
-  function buildTicks(n){
-    if (n === total) return; total = n; const t = $('ticks'); t.textContent = '';
-    for (let i = 0; i < n; i++){
-      const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.title = i ? 'Slide ' + (i + 1) : 'Overview';
-      b.appendChild(document.createElement('i')); b.addEventListener('click', () => send({cmd: 'goto', slide: i})); t.appendChild(b);
-    }
-  }
   addEventListener('message', e => {
     const m = e.data || {}; if (m.banner !== true) return;
     if (m.type === 'status'){
       reveal();
-      buildTicks(m.total);
-      [...$('ticks').children].forEach((b, i) => b.setAttribute('aria-current', String(i === m.slide)));
-      $('label').textContent = m.label ? '  ·  ' + m.label : '';
-      $('count').textContent = (m.slide + 1) + ' / ' + m.total;
+      $('label').textContent = m.label || '';
       showPaused(!!m.paused);
       if (m.theme && m.theme !== theme) paint(m.theme);
     } else if (m.type === 'theme'){ paint(m.theme); }
