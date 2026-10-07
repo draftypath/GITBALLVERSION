@@ -42,7 +42,7 @@
       linear-gradient(180deg, #fbf1df 0%, #fdf8ef 42%, #fbf4e7 70%, #f5e7d0 100%);
   }
   .grain{
-    opacity:.05;
+    opacity:.065;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .32  0 0 0 0 .18  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 
@@ -50,7 +50,7 @@
   .piece{position:absolute;pointer-events:none;user-select:none}
   .piece > img, .piece > canvas{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-drag:none}
   .garland{top:0;aspect-ratio:1908/602}
-  .couple{left:0;bottom:0;aspect-ratio:var(--cr,1241/1184)}
+  .couple{left:0;bottom:calc(-1 * var(--sink,0px));aspect-ratio:var(--cr,1241/1184)}
 
   .halo,.glow{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
   .halo{width:48%;aspect-ratio:1;background:radial-gradient(closest-side, rgba(255,205,118,.40), rgba(255,205,118,0))}
@@ -78,9 +78,6 @@
   /* without the paintings, every slide shares one composition: garland, centred message, Rotary sign-off */
   .nopaint #couple{display:none !important}
   /* with the paintings, Rotary signs off along the bottom of the overview too; the message leaves room for it */
-  .paintbar #hostPos{display:none !important}
-  .paintbar .host-bar{opacity:1 !important}
-  .paintbar #stage:not(.sp) .host-bar{left:var(--ov-left,0)}
 
   /* ---------- message column (designed at 1040 × 800, scaled to fit) ---------- */
   .content{
@@ -173,7 +170,7 @@
   .tier-label[data-metal=premier]{--lab:#8a5c1e
   }
   .tier-label::before,.tier-label::after{content:"";width:calc(34px * var(--s));height:1px;background:currentColor;opacity:.55}
-  .names{display:flex;flex-direction:column;align-items:center;gap:calc(11px * var(--s));width:100%}
+  .names{display:flex;flex-direction:column;align-items:center;gap:calc(16px * var(--s));width:100%}
   .line{display:flex;justify-content:center;align-items:center;white-space:nowrap}
   .name{
     font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;
@@ -268,7 +265,7 @@
       radial-gradient(ellipse 72% 80% at 50% 50%, rgba(0,0,0,0) 48%, rgba(0,0,0,.5) 100%),
       linear-gradient(180deg, #131729 0%, #0e1122 45%, #0c0d19 75%, #120d0e 100%);
   }
-  [data-theme=midnight] .grain{opacity:.07}
+  [data-theme=midnight] .grain{opacity:.085}
   [data-theme=midnight] .garland > img{filter:brightness(.86) saturate(1.04)}
   [data-theme=midnight] .couple > img{filter:brightness(.9) saturate(1.02)}
   [data-theme=midnight] .halo{background:radial-gradient(closest-side, rgba(255,186,100,.24), rgba(255,186,100,0))}
@@ -471,9 +468,9 @@ const ASSETS = {
   // completes a full loop. All three share the same table, so one set of candle flames serves.
   // [file, image width, image height, top of dad's hair, candle flames [x,y,size] in image pixels]
   couples: [
-    { src: "assets/pair-3.webp", w: 1241, h: 1184, head: 0, height: 640, crestAt: .42, top: [427,325,323,326,322,328,332,236,247,257,268,300,275,268,264,285,252,240,239,237,236,234,231,226,176,131,113,104,88,75,43,31,18,11,11,6,0,0,7,16,19,35,41,59,311,421,421,243,218,204,194,186,184,179,178,176,181,185,192,203,224,262,270,327,391,404,420,493,488,483,479,476,474,473,474,476,474,478], candles: [[115,470,1.1]] },
-    { src: "assets/pair-2.webp", w: 1290, h: 1153, head: 0, height: 640, crestAt: .42, top: [395,377,287,287,289,289,297,299,207,209,229,233,265,245,234,231,258,226,216,216,214,211,209,206,204,202,198,190,182,176,168,84,39,23,15,13,3,1,1,4,10,24,32,44,292,388,388,389,188,164,156,142,134,134,135,134,135,142,154,165,188,217,219,233,339,338,345,363,371,448,450,446,443,440,437,436,436,436,439,438,443], candles: [[130,455,1.1]] },
-    { src: "assets/pair-1.webp", w: 1249, h: 1182, head: 0, height: 640, crestAt: .42, top: [423,316,315,315,314,318,314,227,234,251,254,287,268,260,254,283,251,234,231,230,228,226,223,221,219,214,203,193,187,111,42,27,18,13,6,1,1,3,3,7,12,23,36,45,71,413,414,273,248,218,205,194,185,180,180,179,180,184,192,203,213,239,260,282,324,395,413,424,482,477,474,470,467,467,467,468,468,469,1182], candles: [[115,470,1.1]] },
+    { src: "assets/pair-3.webp", w: 1241, h: 1184, head: 0, height: 640, crestAt: .98, top: [427,325,323,326,322,328,332,236,247,257,268,300,275,268,264,285,252,240,239,237,236,234,231,226,176,131,113,104,88,75,43,31,18,11,11,6,0,0,7,16,19,35,41,59,311,421,421,243,218,204,194,186,184,179,178,176,181,185,192,203,224,262,270,327,391,404,420,493,488,483,479,476,474,473,474,476,474,478], candles: [[115,470,1.1]] },
+    { src: "assets/pair-2.webp", w: 1290, h: 1153, head: 0, height: 640, crestAt: .98, top: [395,377,287,287,289,289,297,299,207,209,229,233,265,245,234,231,258,226,216,216,214,211,209,206,204,202,198,190,182,176,168,84,39,23,15,13,3,1,1,4,10,24,32,44,292,388,388,389,188,164,156,142,134,134,135,134,135,142,154,165,188,217,219,233,339,338,345,363,371,448,450,446,443,440,437,436,436,436,439,438,443], candles: [[130,455,1.1]] },
+    { src: "assets/pair-1.webp", w: 1249, h: 1182, head: 0, height: 640, crestAt: .98, top: [423,316,315,315,314,318,314,227,234,251,254,287,268,260,254,283,251,234,231,230,228,226,223,221,219,214,203,193,187,111,42,27,18,13,6,1,1,3,3,7,12,23,36,45,71,413,414,273,248,218,205,194,185,180,180,179,180,184,192,203,213,239,260,282,324,395,413,424,482,477,474,470,467,467,467,468,468,469,1182], candles: [[115,470,1.1]] },
   ],
   logo:   "assets/rotary.png",
   // garland art: bright bulbs / candle flames [x, y, size] in its own pixels
@@ -491,7 +488,6 @@ const ASSETS = {
   const QP = new URLSearchParams(location.search);
   const PAINTINGS = QP.has('paintings') ? true : QP.has('nopaintings') ? false : (BANNER.paintings !== false);
   if (!PAINTINGS) document.documentElement.classList.add('nopaint');
-  if (PAINTINGS) document.documentElement.classList.add('paintbar');
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
   const EMBED = window.self !== window.top;
   if (EMBED) document.body.classList.add('embed');
@@ -629,7 +625,7 @@ const ASSETS = {
     let s = .82, h = .74;
     const apply = () => { stage.style.setProperty('--s', s); stage.style.setProperty('--h', h); rows.forEach(layoutRow); };
     const need  = () => [...box.children].reduce((t, c) => t + c.offsetHeight, 0) + (box.children.length - 1) * 40 * s;
-    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : PAINTINGS ? 1.15 : 1.15) + 1);
+    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : c.classList.contains('cells') ? 1.3 : 1.15) + 1);
     for (h of [.74, .66, .58]){
       s = .82; apply();
       while (!fits() && s > .7){ s -= .03; apply(); }
@@ -702,13 +698,16 @@ const ASSETS = {
     const q = portrait ? Math.min(.72 * W / CPL.w, .42 * H / CPL.h) : k * (COUPLES[coupleIx].height || 460) / CPL.h;
     const cw = CPL.w * q, ch = CPL.h * q;
     $('couple').style.width = cw + 'px';
+    const sink = PAINTINGS ? 120 * k : 0;
+    $('couple').style.setProperty('--sink', sink + 'px');
     const headTop = PAINTINGS ? H - (CPL.h - COUPLES[coupleIx].head) * q : H - 40 * k;   // top of dad's hair (or the floor)
     const CREST_X = 415 * k;                       // without the paintings, the Rotary crest owns the left column
 
     // message column
-    const xL0 = portrait ? 24 * k : PAINTINGS ? cw + 24 * k : CREST_X + 230 * k;
+    const crestCol = PAINTINGS && COUPLES[coupleIx].crestAt != null ? COUPLES[coupleIx].crestAt * cw + 190 * k : 0;
+    const xL0 = portrait ? 24 * k : PAINTINGS ? cw - 10 * k : CREST_X + 230 * k;
     const xR0 = portrait ? W - 24 * k : PAINTINGS ? W - 120 * k : W - 110 * k;
-    const bottom = portrait ? H - ch - 12 * k : PAINTINGS ? H - 132 * k : H - 38 * k;   // room for the sign-off bar
+    const bottom = portrait ? H - ch - 12 * k : H - 38 * k;
     const gap = 14 * Math.max(k, .4);
     const hang = 0;                                // text sits just below the vine tips, never under them
     // widest line (the shared sponsor row may reach past the 1040px column)
@@ -784,23 +783,23 @@ const ASSETS = {
         const a = Math.max(0, Math.floor(x0 / q / 16)), b = Math.min(cp.top.length - 1, Math.floor(x1 / q / 16));
         if (a > b) return H;
         let m = Infinity; for (let i = a; i <= b; i++) m = Math.min(m, cp.top[i]);
-        return H - ch + m * q;
+        return H + sink - ch + m * q;
       };
       let best = null;
       const pinned = PAINTINGS && COUPLES[coupleIx].crestAt != null;   // a painting that names its crest spot keeps the crest there
       for (let f = 0; f <= (PAINTINGS && !pinned ? 1.0001 : 0); f += .05){
         const cx = home + f * (xL + 60 * k - home);
-        let z = PAINTINGS ? k : 1.15 * k, x, y, ok = false;   // a touch larger when it has the column to itself
+        let z = PAINTINGS ? (pinned ? 1.06 * k : k) : 1.15 * k, x, y, ok = false;   // a touch larger when it has the column to itself
         for (let i = 0; i < 50 && z > .35 * k && !ok; i++){
           x = cx - 170 * z;
-          const floor = topUnder(x, x + 340 * z) - 24 * k - hh * z;   // just above the tallest head under the crest                 // resting just above dad's head…
-          const ceil  = vinesBelow(x, x + 340 * z) + gap;          // …or lifted, but never into the vines
-          const want = mid - hh * z / 2, ys = [];
+          const floor = topUnder(x, x + 340 * z) - (pinned ? 10 : 24) * k - hh * z;   // just above the tallest head under the crest
+          const ceil  = vinesBelow(x, x + 340 * z) + gap - (pinned ? 90 * k : 0);   // …or lifted; the seal may tuck a little under the leaf tips
+          const want = pinned ? Math.max(ceil, mid - hh * z / 2 + 46 * k) : mid - hh * z / 2, ys = [];
           for (let yy = floor; yy >= ceil - .5; yy -= 6 * k) ys.push(yy);
           if (ceil <= floor) ys.push(Math.min(floor, Math.max(ceil, want)));
           ys.sort((a, b) => Math.abs(a - want) - Math.abs(b - want));
           if (x >= 8 * k) for (const yy of ys){
-            if (placed.every(p => p.y1 < yy || p.y0 > yy + hh * z || x + 340 * z <= p.x0 - 40 * k)){ y = yy; ok = true; break; }
+            if (placed.every(p => p.y1 < yy || p.y0 > yy + hh * z || x + 340 * z <= p.x0 - 40 * k) && (!pinned || x + 340 * z <= xL + 200 * k)){ y = yy; ok = true; break; }
           }
           if (!ok) z *= .97;
         }
@@ -808,7 +807,7 @@ const ASSETS = {
         if (ok && (!best || z > best.z * 1.04 || (z > best.z * .96 && off < best.off - 4))) best = {z, x, y, off};
       }
       if (!best){ const z = .5 * k; best = {z, x: home - 170 * z, y: headTop - 24 * k - hh * z}; }
-      best.x -= 36 * k;   // sit a touch further left so the lockup owns its own column
+      if (!pinned) best.x -= 36 * k;   // sit a touch further left so the lockup owns its own column
       hs = best.z; hx = best.x; hy = best.y;
     }
     hp.style.transform = `translate(${hx}px, ${hy}px) scale(${hs})`;
