@@ -103,7 +103,7 @@
   .slide.sponsor .thanks{font-size:120px;margin:-.3em 0 -.3em;padding:.3em .14em .34em}
   .slide.sponsor .tier-label{font-size:30px;letter-spacing:.3em;padding-left:.3em;margin:0 0 30px}
   .slide.sponsor .tier-label::before,.slide.sponsor .tier-label::after{width:46px}
-  .slide.sponsor .tier-label[data-metal]{font-size:34px}
+  .slide.sponsor .tier-label[data-metal]{font-size:34px;font-weight:700}   /* paid status line on their own slide: one step bolder */
   .slide.sponsor.premium .sp-name{font-size:70px}
   .plaque{
     position:relative;margin-top:34px;border-radius:18px;background:#fffdf7;flex:none;
@@ -183,11 +183,10 @@
   .tier-label[data-metal=premier]{--lab:#8a5c1e;--metal:linear-gradient(180deg,#ad7c2e 0%,#86581a 52%,#6a430f 100%)}
   .tier-label::before,.tier-label::after{content:"";width:calc(34px * var(--s));height:1px;background:var(--lab,var(--gold-deep));opacity:.55}
   /* the paid tiers read as engraved metal: bold small caps, a polished face, a hairline of light beneath */
-  .tier-label[data-metal]{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700}
+  .tier-label[data-metal]{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600}
   .tier-label[data-metal] .mt{background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 1px 0 rgba(255,251,240,.95)) drop-shadow(0 3px 8px rgba(120,80,25,.14))}
   .t0 .tier-label[data-metal]{font-size:calc(29px * var(--s))}
-  .t0 .name, .cell .name, .slide.sponsor.premium .sp-name{font-weight:700}
   .names{display:flex;flex-direction:column;align-items:center;gap:calc(16px * var(--s));width:100%}
   .line{display:flex;justify-content:center;align-items:center;white-space:nowrap}
   .name{
@@ -225,6 +224,12 @@
   /* list tiers */
   .t2 .name{--fs:39px}
   .t2{gap:calc(22px * var(--s))}
+  /* the paid tiers lead with the name; their status sits beneath it */
+  .t0{flex-direction:column-reverse;gap:calc(4px * var(--s))}
+  .cell{flex-direction:column-reverse}
+  .cell .tier-label{margin-top:calc(4px * var(--s))}
+  /* a little more air before the General list, so the last status line and its heading don't read as one */
+  .t2{margin-top:calc(14px * var(--s))}
   .t2 .tier-label{font-size:calc(29px * var(--s));letter-spacing:.26em;padding-left:.26em}
   [data-theme=midnight] .t2 .tier-label{--lab:#e6c684}
   .sep{
@@ -270,16 +275,16 @@
     background:radial-gradient(closest-side, rgba(255,254,249,.95), rgba(255,254,249,0))}
   .tp-kicker{
     display:flex;align-items:center;gap:28px;white-space:nowrap;margin-bottom:30px;
-    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700;
-    font-size:30px;letter-spacing:.4em;color:var(--gold-deep);text-transform:uppercase;
+    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;
+    font-size:36px;letter-spacing:.38em;color:var(--gold-deep);text-transform:uppercase;
   }
-  .tp-kicker #tpArticle{margin-right:-.4em}   /* the trailing letter-space would pull the words off-centre */
+  .tp-kicker #tpArticle{margin-right:-.38em}   /* the trailing letter-space would pull the words off-centre */
   .tp-kicker .rule,.tp-event .rule{width:80px;height:1px;flex:none;background:linear-gradient(90deg,rgba(185,134,52,0),rgba(185,134,52,.9))}
   .tp-kicker .rule:last-child,.tp-event .rule:last-child{transform:scaleX(-1)}
   .thanks.tp-script{font-size:184px;line-height:1;margin:-.26em 0 -.38em;padding:.3em .16em .4em;animation-delay:2.5s}
   .tp-event{
     display:flex;align-items:center;gap:30px;margin-top:20px;white-space:nowrap;
-    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700;
+    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;
     font-size:44px;line-height:1;letter-spacing:.3em;color:var(--ink);text-transform:uppercase;
   }
   .tp-event #event{margin-right:-.3em}
@@ -290,9 +295,9 @@
   .tp-host .seal{width:140px;height:140px}
   .tp-host .seal img{width:112px;height:112px}
   .tp-host .host-text{text-align:center}
-  .tp-host .host-kicker{font-size:24px;letter-spacing:.28em;padding-left:.28em;font-weight:700}
-  .tp-host .host-name{font-size:45px;margin-top:6px;white-space:nowrap}
-  .tp-host .motto{font-size:32px;margin-top:16px}
+  .tp-host .host-kicker{font-size:24px;letter-spacing:.28em;padding-left:.28em}
+  .tp-host .host-name{font-size:45px;margin-top:12px;white-space:nowrap}
+  .tp-host .motto{font-size:32px;margin-top:10px}
   [data-theme=midnight] .title-page::before{background:radial-gradient(closest-side, rgba(255,196,120,.03), rgba(255,196,120,0))}
   /* the title page's gold lines read a shade brighter after dark */
   [data-theme=midnight] .tp-kicker, [data-theme=midnight] .tp-host .host-kicker, [data-theme=midnight] .tp-host .motto{color:#ebcd8e}
@@ -972,7 +977,7 @@ const ASSETS = {
     const q = Math.min(DPR, 1920 / W, 1080 / H, 1.5);
     for (const cv of [bkC, fxC]){ cv.width = Math.round(W * q); cv.height = Math.round(H * q); }
   }
-  const orbs  = Array.from({length:4}, () => ({x:rnd(.2,.88), y:rnd(.22,.83), r:rnd(36,80), a:rnd(.035,.075), vx:rnd(-.002,.002), vy:rnd(-.003,.003), p:rnd(0,6.28)}));
+  const orbs  = Array.from({length:3}, () => ({x:rnd(.2,.88), y:rnd(.22,.83), r:rnd(34,70), a:rnd(.025,.05), vx:rnd(-.002,.002), vy:rnd(-.003,.003), p:rnd(0,6.28)}));
   const newMote = anyY => ({x:rnd(0,1), y:anyY?rnd(0,1):rnd(1.0,1.05), r:rnd(2.5,7), vy:rnd(.006,.015), sw:rnd(10,30), sp:rnd(.2,.6), p:rnd(0,6.28), a:rnd(.3,.66)});
   const motes = Array.from({length:58}, () => newMote(true));
 
@@ -1251,9 +1256,8 @@ const ASSETS = {
   @font-face{font-family:'Cormorant Garamond';font-weight:500;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-garamond-500.woff2) format('woff2')}
   @font-face{font-family:'Cormorant Garamond';font-weight:600;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-garamond-600.woff2) format('woff2')}
   @font-face{font-family:'Cormorant Garamond';font-weight:500;font-style:italic;font-display:block;src:url(assets/fonts/cormorant-garamond-500-italic.woff2) format('woff2')}
-  @font-face{font-family:'Cormorant SC';font-weight:600;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-sc-600.woff2) format('woff2')}
-  @font-face{font-family:'Cormorant Garamond';font-weight:700;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-garamond-700.woff2) format('woff2')}
   @font-face{font-family:'Cormorant SC';font-weight:700;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-sc-700.woff2) format('woff2')}
+  @font-face{font-family:'Cormorant SC';font-weight:600;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-sc-600.woff2) format('woff2')}
 </style>
 </body>
 </html>
