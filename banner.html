@@ -327,10 +327,16 @@
   [data-theme=midnight] .bg, [data-theme=midnight] .veil{
     background:
       radial-gradient(ellipse 62% 46% at 50% 0%, rgba(255,184,92,.10), rgba(255,184,92,0) 70%),
-      radial-gradient(ellipse 38% 48% at 9% 90%, rgba(255,168,78,.15), rgba(255,168,78,0) 70%),
       radial-gradient(ellipse 72% 80% at 50% 50%, rgba(0,0,0,0) 48%, rgba(0,0,0,.5) 100%),
       linear-gradient(180deg, #131729 0%, #0e1122 45%, #0c0d19 75%, #120d0e 100%);
   }
+  /* the warm lamp in the bottom-left corner lights the painting: it dims when the painting leaves
+     and warms back up when the father & daughter return on the title page */
+  .lamp{opacity:0}
+  [data-theme=midnight] .lamp{opacity:1;background:radial-gradient(ellipse 38% 48% at 9% 90%, rgba(255,168,78,.15), rgba(255,168,78,0) 70%);
+    transition:opacity calc(var(--fade,1.8s) * 1.2) cubic-bezier(.4,0,.2,1)}
+  [data-theme=midnight] #stage.hide-couple .lamp{opacity:.3}
+  .still .lamp{transition:none}
   [data-theme=midnight] .grain{opacity:.085}
   [data-theme=midnight] .garland > img{filter:brightness(.86) saturate(1.04)}
   [data-theme=midnight] .couple > img{filter:brightness(.9) saturate(1.02)}
@@ -453,6 +459,7 @@
 <body>
 <div id="stage">
   <div class="layer bg"></div>
+  <div class="layer lamp"></div>
   <canvas class="layer" id="bokeh"></canvas>
   <div class="layer grain"></div>
 

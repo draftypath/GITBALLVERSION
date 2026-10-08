@@ -1,4 +1,4 @@
-FATHER–DAUGHTER BALL · SPONSOR THANK-YOU BANNER
+THE ENCHANTED EVENING FATHER–DAUGHTER BALL · SPONSOR BANNER
 ================================================
 
 WHAT'S HERE
@@ -43,7 +43,7 @@ ON THE NIGHT (laptop → TV over HDMI)
 KEYS & CLICKS
   F   fullscreen (or double-click)  M   Evening ↔ Midnight theme
   →   or Space   next slide         ←   previous slide
-  Home  back to the overview        P   pause / resume the slideshow
+  Home  back to the title page      P   pause / resume the slideshow
   Click anywhere to go to the next slide (click near the left edge to go back).
   Faint arrows at the screen edges, and a fullscreen button and moon/sun in the
   bottom-right corner, appear only while the mouse is moving; they vanish when
@@ -62,5 +62,5 @@ KEYS & CLICKS
 
 LINK OPTIONS (add to the end of the file name in the address bar)
   index.html?midnight     start in the Midnight theme
-  index.html?slide=3      start on slide 3 (0 is the overview)
+  index.html?slide=3      start on slide 3 (0 is the title page, 1 the Thank You page)
   index.html?still        a frozen frame with no animation, for screenshots
