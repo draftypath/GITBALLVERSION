@@ -34,6 +34,10 @@
   #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--ivory);
     transform:translate(-50%,-50%) scale(var(--fit,1));transform-origin:center center}
   .layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  /* phones and tablets: the 1920×1080 stage is laid out at the size the screen shows (zoom) rather than drawn
+     full-size and shrunk (transform) — the same picture, at a fraction of the memory, so iOS never runs out */
+  .lite body{display:grid;place-items:center}
+  .lite #stage{position:relative;left:auto;top:auto;transform:none;zoom:var(--fit,1)}
 
   /* warm room behind everything */
   .bg,.veil{
@@ -586,6 +590,11 @@ const ASSETS = {
   const PAINTINGS = QP.has('paintings') ? true : QP.has('nopaintings') ? false : (BANNER.paintings !== false);
   if (!PAINTINGS) document.documentElement.classList.add('nopaint');
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
+  const UA = navigator.userAgent;
+  const LITE = /[?&]lite\b/.test(location.search) || matchMedia('(pointer: coarse)').matches || /iPhone|iPad|iPod|Android/.test(UA) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(UA));
+  if (LITE) document.documentElement.classList.add('lite');
+  const AS = LITE ? .5 : 1;            // twinkle/flicker canvases at half resolution on phones (they are soft glows)
+  let canvReady = false;
   const EMBED = window.self !== window.top;
   if (EMBED) document.body.classList.add('embed');
   const tellParent = msg => { if (EMBED) try { parent.postMessage(Object.assign({banner: true}, msg), '*'); } catch (e) {} };
@@ -788,7 +797,8 @@ const ASSETS = {
     const f = (slides[cur] && frameOf(slides[cur].el) === 's') ? SP : OV;
     if (f) content.style.transform = `translate(${f.left}px, ${f.top}px) scale(${f.c})`;
   }
-  function place(){
+  function place(){ stage.style.setProperty('--fit', 1); try { place0(); } finally { fitStage(); } }
+  function place0(){
     const W = 1920, H = 1080; VIEW.w = W; VIEW.h = H;   // the fixed TV canvas
     const portrait = W / H < 1.1;
     const k = portrait ? W / 1000 : Math.min(W / 1920, H / 1080);   // text scale
@@ -926,7 +936,8 @@ const ASSETS = {
 
   /* ---- fit the 16:9 stage to the window ---- */
   function fitStage(){ const v = window.visualViewport, w = v ? v.width * v.scale : innerWidth, h = v ? v.height * v.scale : innerHeight;
-    stage.style.setProperty('--fit', Math.min(w / 1920, h / 1080)); }
+    stage.style.setProperty('--fit', Math.min(w / 1920, h / 1080));
+    if (LITE && canvReady) sizeViewportCanvases(1920, 1080); }
   if (window.visualViewport) visualViewport.addEventListener('resize', fitStage);
   fitStage();
   addEventListener('resize', fitStage);
@@ -977,7 +988,7 @@ const ASSETS = {
     coupleIx = ix % COUPLES.length; const cp = COUPLES[coupleIx];
     CPL = {w: cp.w, h: cp.h};
     $('couple').style.setProperty('--cr', cp.w + '/' + cp.h);
-    for (const id of ['cDim', 'cBloom']){ $(id).width = cp.w; $(id).height = cp.h; }
+    for (const id of ['cDim', 'cBloom']){ $(id).width = Math.round(cp.w * AS); $(id).height = Math.round(cp.h * AS); }
     candles = cp.candles.map(([x,y,k]) => ({x, y, k, p: rnd(0, 100), w: 0}));
   }
   setCouple(0);
@@ -989,7 +1000,9 @@ const ASSETS = {
   const bk = bkC.getContext('2d'), fx = fxC.getContext('2d');
   // soft glows and dust gain nothing above 1080p, so their canvases never exceed it (big win on 4K TVs)
   function sizeViewportCanvases(W, H){
-    const q = Math.min(DPR, 1920 / W, 1080 / H, 1.5);
+    const fit = parseFloat(stage.style.getPropertyValue('--fit')) || 1;
+    const q = LITE ? Math.min(1, fit * Math.min(devicePixelRatio || 1, 2)) : Math.min(DPR, 1920 / W, 1080 / H, 1.5);
+    if (LITE && bkC.width === Math.round(W * q)) return;
     for (const cv of [bkC, fxC]){ cv.width = Math.round(W * q); cv.height = Math.round(H * q); }
   }
   const orbs  = Array.from({length:3}, () => ({x:rnd(.2,.88), y:rnd(.22,.83), r:rnd(34,70), a:rnd(.025,.05), vx:rnd(-.002,.002), vy:rnd(-.003,.003), p:rnd(0,6.28)}));
@@ -998,6 +1011,7 @@ const ASSETS = {
 
   const gDm = $('gDim').getContext('2d'), gBl = $('gBloom').getContext('2d'), gFx = $('gFx').getContext('2d');
   const cDm = $('cDim').getContext('2d'), cBl = $('cBloom').getContext('2d');
+  if (LITE) for (const id of ['gDim', 'gBloom', 'gFx']){ $(id).width = Math.round(TOP.w * AS); $(id).height = Math.round(TOP.h * AS); }
   let last = performance.now(), nextGlint = 0, frameN = 0, lastArt = 0;
 
   function draw(now){
@@ -1019,6 +1033,7 @@ const ASSETS = {
     const adt = Math.min(.1, t - lastArt); if (doArt) lastArt = t;
     if (doArt){
     // garland: each bulb slowly breathes between a soft amber dip and a warm bloom
+    for (const c of [gDm, gBl, gFx, cDm, cBl]) c.setTransform(AS, 0, 0, AS, 0, 0);
     gDm.clearRect(0,0,TOP.w,TOP.h); gBl.clearRect(0,0,TOP.w,TOP.h); gFx.clearRect(0,0,TOP.w,TOP.h);
     for (const l of lights){
       let v = ANIMATE ? .5 + .5*Math.sin(t*l.f*6.283 + l.p) : .62;
@@ -1252,12 +1267,14 @@ const ASSETS = {
     else if (e.key === 'p' || e.key === 'P'){ setPaused(!paused); }
   });
 
-  sizeViewportCanvases(1920, 1080);
+  canvReady = true; sizeViewportCanvases(1920, 1080);
   const ready = [document.fonts ? document.fonts.ready : null,
                  ...['topArt', 'coupleArt', 'logo'].map(id => $(id).decode ? $(id).decode().catch(() => {}) : null),
                  ...logoLoads];
   Promise.all(ready).then(() => {
-    fitSponsors(); flattenNames(); measure(); place(); snugShortLogos();
+    stage.style.setProperty('--fit', 1);
+    fitSponsors(); flattenNames(); measure(); place();
+    stage.style.setProperty('--fit', 1); snugShortLogos(); fitStage();
     if (ANIMATE) requestAnimationFrame(draw);
     const start = parseInt(qs.get('slide') || '0', 10) || 0;
     if (start) { slides[0].el.classList.remove('on'); cur = start % slides.length; slides[cur].el.classList.add('on'); applyFrame(); sceneFor(slides[cur].el); }
