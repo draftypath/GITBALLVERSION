@@ -1,4 +1,4 @@
-FATHER–DAUGHTER BALL · SPONSOR THANK-YOU BANNER
+THE ENCHANTED EVENING FATHER–DAUGHTER BALL · SPONSOR BANNER
 HOW TO PLAY IT ON THE TV (no internet needed)
 ================================================
 
@@ -32,13 +32,27 @@ ON THE NIGHT
 6. Turn on Do Not Disturb on the laptop so no pop-ups appear on the TV,
    plug the laptop into power, and leave it.
 
+   It loops all evening on its own and keeps the screen awake by itself.
+   As a backup, before guests arrive:
+     • Laptop: keep it PLUGGED IN and the LID OPEN.
+         Windows: Settings → System → Power → "When plugged in, turn off
+                  my screen after" → Never (and "put my device to sleep
+                  after" → Never).
+         Mac:     System Settings → Lock Screen → "Turn display off on
+                  power adapter when inactive" → Never.
+     • TV: many TVs switch themselves off after a few hours without a
+       remote button press. In the TV's settings look for "Auto Power
+       Off", "Eco" or "Sleep Timer" and turn it OFF.
+     • Don't minimise the banner window or switch to another tab in it:
+       it keeps the screen awake only while it is showing.
+
 
 THE CONTROLS (if you need them)
 -------------------------------
    F              fullscreen on / off          (Esc also exits fullscreen)
    P              pause / resume
    → and ←        next / previous slide        (Space also goes forward)
-   Home           jump back to the main Thank You page
+   Home           jump back to the title page
    M              switch between the cream "Evening" look and the dark
                   "Midnight" look — pick whichever suits the room lighting.
                   (The sun/moon icon under the banner does the same.)
