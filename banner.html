@@ -64,16 +64,16 @@
   .couple, .host-bar{transition:opacity calc(var(--fade,1.8s) * .5) cubic-bezier(.4,0,.2,1)}
   #stage.hide-couple .couple{opacity:0 !important}
   .host-bar{
-    position:absolute;left:0;right:0;bottom:34px;display:flex;justify-content:center;align-items:center;gap:20px;
+    position:absolute;left:0;right:0;bottom:24px;display:flex;justify-content:center;align-items:center;gap:22px;
     opacity:0;pointer-events:none;color:var(--ink);
   }
   #stage.show-bar .host-bar{opacity:1;transition-delay:calc(var(--fade,1.8s) * .35)}
-  .host-bar .seal{--sz:70px;width:var(--sz);height:var(--sz);box-shadow:0 0 0 1px #cfa75e,0 0 0 4px rgba(255,252,244,.95),0 0 0 5px rgba(196,150,74,.7),0 6px 16px rgba(120,80,25,.18)}
-  .host-bar .seal img{width:54px;height:54px}
-  .hb-kicker{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;font-size:17px;letter-spacing:.24em;color:var(--gold-deep);text-transform:uppercase}
-  .hb-name{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:33px;line-height:1;color:var(--ink);margin-left:-6px}
+  .host-bar .seal{top:-3px;--sz:104px;width:var(--sz);height:var(--sz);box-shadow:0 0 0 1px #cfa75e,0 0 0 4px rgba(255,252,244,.95),0 0 0 5px rgba(196,150,74,.7),0 6px 16px rgba(120,80,25,.18)}
+  .host-bar .seal img{width:91px;height:91px}
+  .hb-kicker{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;font-size:21px;letter-spacing:.24em;color:var(--gold-deep);text-transform:uppercase}
+  .hb-name{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:36px;line-height:1;color:var(--ink);margin-left:-6px}
   .hb-sep{width:5px;height:5px;transform:rotate(45deg);background:linear-gradient(135deg,#f0d394,#a87428);margin:0 4px}
-  .hb-motto{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:22px;color:var(--gold-deep)}
+  .hb-motto{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:32px;color:var(--gold-deep)}
   [data-theme=midnight] .host-bar .seal{box-shadow:0 0 0 1px #d9b46c,0 0 0 4px rgba(20,22,36,.9),0 0 0 5px rgba(216,178,110,.8),0 8px 20px rgba(0,0,0,.45)}
   .still .couple,.still .host-bar,.still .title-page{transition:none}
   .nopaint #couple{display:none !important}
@@ -95,6 +95,12 @@
   .slide.sponsor .thanks{font-size:150px}
   .sp-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%}
   .sp-body .plaque{margin-top:0}
+  .sp-body .plaque + .sp-note{margin-top:34px}
+  /* the status sits beneath the logo like a caption, then the thank-you line */
+  .sp-body .tier-label{order:2}
+  .sp-body .sp-note{order:3}
+  .slide.sponsor .sp-body .tier-label{margin:36px 0 0}
+  .slide.sponsor .sp-body .sp-note{margin-top:20px}
   .slide.sponsor .tier-label{font-size:32px}
   .slide.sponsor .sp-name{font-size:66px}
   .slide.sponsor .sp-note{font-size:36px}
@@ -250,7 +256,7 @@
       0 10px 26px rgba(120,80,25,.20),
       0 0 60px rgba(255,214,140,.55);
   }
-  .seal img{width:124px;height:124px;display:block}
+  .seal img{width:136px;height:136px;display:block}
   .host-text{text-align:center}
   .host-kicker{
     font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;
@@ -293,7 +299,7 @@
   /* the host, stacked on the centre line like the foot of an invitation */
   .tp-host{display:flex;flex-direction:column;align-items:center;gap:40px}
   .tp-host .seal{width:140px;height:140px}
-  .tp-host .seal img{width:112px;height:112px}
+  .tp-host .seal img{width:123px;height:123px}
   .tp-host .host-text{text-align:center}
   .tp-host .host-kicker{font-size:24px;letter-spacing:.28em;padding-left:.28em}
   .tp-host .host-name{font-size:45px;margin-top:12px;white-space:nowrap}
@@ -809,7 +815,7 @@ const ASSETS = {
     // and finishes above the Rotary footer
     const xL0 = portrait ? 24 * k : 110 * k;
     const xR0 = portrait ? W - 24 * k : W - 110 * k;
-    const floorY = H - 126 * k;                        // the Rotary footer below
+    const floorY = H - 134 * k;                        // the Rotary footer below
     const bottom = portrait ? H - ch - 12 * k : floorY;
     const gap = 14 * Math.max(k, .4);
     const hang = 0;                                // text sits just below the vine tips, never under them
@@ -1139,7 +1145,7 @@ const ASSETS = {
       if (sp.tile) pl.style.background = sp.tile;
       const big = t.kind === 'premier';
       const grow = Math.min(1.3, Math.max(.6, +sp.size || 1));     // optional per-sponsor "size" in sponsors.js
-      const maxW = (big ? 900 : 840) * grow, maxH = (big ? 400 : 370) * grow;
+      const maxW = (big ? 1060 : 990) * grow, maxH = (big ? 470 : 435) * grow;   // the logo is the slide: no printed name beneath it
       // a sensible card before the logo arrives, so nothing can ever size itself to a raw 1400px image
       pl.style.width = maxW * .8 + 'px'; pl.style.height = maxH * .8 + 'px'; pl.style.padding = '30px';
       const fit = () => {
@@ -1152,7 +1158,7 @@ const ASSETS = {
         return true;
       };
       logoLoads.push(new Promise(res => {
-        const done = ok => { if (!ok){ pl.remove(); nm.classList.add('solo'); } res(); };
+        const done = ok => { if (!ok && pl.isConnected){ pl.remove(); nm.classList.add('solo'); note.before(nm); } res(); };
         img.onload = () => done(fit() || true);
         img.onerror = () => done(false);
         img.src = sp.logo;
@@ -1160,7 +1166,7 @@ const ASSETS = {
         setTimeout(() => { fit(); res(); }, 4000);   // never hold the show up for a slow logo
       }));
     }
-    const nm = document.createElement('div'); nm.className = 'sp-name' + (sp.logo ? '' : ' solo'); nm.textContent = sp.name; body.appendChild(nm);
+    const nm = document.createElement('div'); nm.className = 'sp-name' + (sp.logo ? '' : ' solo'); nm.textContent = sp.name; if (!sp.logo) body.appendChild(nm);
     const note = document.createElement('p'); note.className = 'sp-note'; note.textContent = sp.note || NOTES[t.kind] || ''; body.appendChild(note);
     content.appendChild(el);
     const tierKey = /gold/i.test(t.tier || '') ? 'gold' : /royal/i.test(t.tier || '') ? 'royal' : /silver/i.test(t.tier || '') ? 'silver' : t.kind;
