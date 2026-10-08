@@ -34,10 +34,12 @@
   #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;background:var(--ivory);
     transform:translate(-50%,-50%) scale(var(--fit,1));transform-origin:center center}
   .layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  /* phones: never let the browser enlarge small text — the stage is one picture, scaled as a whole */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   /* phones and tablets: the 1920×1080 stage is laid out at the size the screen shows (zoom) rather than drawn
-     full-size and shrunk (transform) — the same picture, at a fraction of the memory, so iOS never runs out */
-  .lite body{display:grid;place-items:center}
-  .lite #stage{position:relative;left:auto;top:auto;transform:none;zoom:var(--fit,1)}
+     full-size and shrunk (transform) — the same picture at a fraction of the memory, so iOS never runs out */
+  .lite-zoom body{display:grid;place-items:center}
+  .lite-zoom #stage{position:relative;left:auto;top:auto;transform:none;zoom:var(--fit,1)}
 
   /* warm room behind everything */
   .bg,.veil{
@@ -592,7 +594,7 @@ const ASSETS = {
   if (/AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent)) document.documentElement.classList.add('webkit');
   const UA = navigator.userAgent;
   const LITE = /[?&]lite\b/.test(location.search) || matchMedia('(pointer: coarse)').matches || /iPhone|iPad|iPod|Android/.test(UA) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(UA));
-  if (LITE) document.documentElement.classList.add('lite');
+  if (LITE) document.documentElement.classList.add('lite', 'lite-zoom');
   const AS = LITE ? .5 : 1;            // twinkle/flicker canvases at half resolution on phones (they are soft glows)
   let canvReady = false;
   const EMBED = window.self !== window.top;
@@ -1274,7 +1276,16 @@ const ASSETS = {
   Promise.all(ready).then(() => {
     stage.style.setProperty('--fit', 1);
     fitSponsors(); flattenNames(); measure(); place();
-    stage.style.setProperty('--fit', 1); snugShortLogos(); fitStage();
+    stage.style.setProperty('--fit', 1); snugShortLogos();
+    // phones: check the zoomed picture is an exact miniature (no browser text enlarging); if not, use the desktop scaling
+    const probes = LITE ? ['hbKicker', 'hbName', 'hbMotto', 'message', 'hostName'].map($).filter(Boolean) : [];
+    const full = probes.map(e => e.getBoundingClientRect().width);
+    fitStage();
+    if (LITE){
+      const f = parseFloat(stage.style.getPropertyValue('--fit')) || 1;
+      const off = probes.some((e, i) => full[i] > 0 && Math.abs(e.getBoundingClientRect().width / (full[i] * f) - 1) > .06);
+      if (off){ document.documentElement.classList.remove('lite-zoom'); fitStage(); }
+    }
     if (ANIMATE) requestAnimationFrame(draw);
     const start = parseInt(qs.get('slide') || '0', 10) || 0;
     if (start) { slides[0].el.classList.remove('on'); cur = start % slides.length; slides[cur].el.classList.add('on'); applyFrame(); sceneFor(slides[cur].el); }
