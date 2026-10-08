@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Thank You · Father–Daughter Ball</title>
+<title>The Enchanted Evening · Father–Daughter Ball</title>
 
 <script src="sponsors.js"></script>
 
@@ -59,14 +59,15 @@
   .glow.b{animation-delay:-2.4s}.glow.c{animation-delay:-4.7s}
   @keyframes breathe{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.06)}}
   .couple .halo{width:115%;background:radial-gradient(closest-side, rgba(255,186,104,.34), rgba(255,186,104,0))}
-  /* on sponsor slides the father & daughter and the Rotary crest step aside for the sponsor */
-  .couple, .host-pos, .host-bar{transition:opacity calc(var(--fade,1.8s) * .5) cubic-bezier(.4,0,.2,1)}
-  #stage.sp .couple, #stage.sp .host-pos{opacity:0 !important}
+  /* the father & daughter belong to the title page; every page after it signs off with the Rotary footer,
+     which stays put from the Thank You page through every sponsor */
+  .couple, .host-bar{transition:opacity calc(var(--fade,1.8s) * .5) cubic-bezier(.4,0,.2,1)}
+  #stage.hide-couple .couple{opacity:0 !important}
   .host-bar{
     position:absolute;left:0;right:0;bottom:34px;display:flex;justify-content:center;align-items:center;gap:20px;
     opacity:0;pointer-events:none;color:var(--ink);
   }
-  #stage.sp .host-bar{opacity:1;transition-delay:calc(var(--fade,1.8s) * .35)}
+  #stage.show-bar .host-bar{opacity:1;transition-delay:calc(var(--fade,1.8s) * .35)}
   .host-bar .seal{--sz:70px;width:var(--sz);height:var(--sz);box-shadow:0 0 0 1px #cfa75e,0 0 0 4px rgba(255,252,244,.95),0 0 0 5px rgba(196,150,74,.7),0 6px 16px rgba(120,80,25,.18)}
   .host-bar .seal img{width:54px;height:54px}
   .hb-kicker{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:600;font-size:17px;letter-spacing:.24em;color:var(--gold-deep);text-transform:uppercase}
@@ -74,10 +75,8 @@
   .hb-sep{width:5px;height:5px;transform:rotate(45deg);background:linear-gradient(135deg,#f0d394,#a87428);margin:0 4px}
   .hb-motto{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:22px;color:var(--gold-deep)}
   [data-theme=midnight] .host-bar .seal{box-shadow:0 0 0 1px #d9b46c,0 0 0 4px rgba(20,22,36,.9),0 0 0 5px rgba(216,178,110,.8),0 8px 20px rgba(0,0,0,.45)}
-  .still .couple,.still .host-pos,.still .host-bar{transition:none}
-  /* without the paintings, every slide shares one composition: garland, centred message, Rotary sign-off */
+  .still .couple,.still .host-bar,.still .title-page{transition:none}
   .nopaint #couple{display:none !important}
-  /* with the paintings, Rotary signs off along the bottom of the overview too; the message leaves room for it */
 
   /* ---------- message column (designed at 1040 × 800, scaled to fit) ---------- */
   .content{
@@ -104,6 +103,8 @@
   .slide.sponsor .thanks{font-size:120px;margin:-.3em 0 -.3em;padding:.3em .14em .34em}
   .slide.sponsor .tier-label{font-size:30px;letter-spacing:.3em;padding-left:.3em;margin:0 0 30px}
   .slide.sponsor .tier-label::before,.slide.sponsor .tier-label::after{width:46px}
+  .slide.sponsor .tier-label[data-metal]{font-size:34px}
+  .slide.sponsor.premium .sp-name{font-size:70px}
   .plaque{
     position:relative;margin-top:34px;border-radius:18px;background:#fffdf7;flex:none;
     display:grid;place-items:center;overflow:hidden;
@@ -111,6 +112,14 @@
                0 22px 50px rgba(120,80,25,.16), 0 0 70px rgba(255,214,140,.35);
   }
   .plaque img{width:100%;height:100%;object-fit:contain;display:block}
+  /* paid tiers: a soft halo behind the logo card, in the tier's own metal */
+  .slide.sponsor[data-metal] .plaque{
+    box-shadow:0 0 0 1.5px #cfa75e, 0 0 0 6px rgba(255,252,244,.95), 0 0 0 7.5px rgba(196,150,74,.6),
+               0 22px 50px rgba(120,80,25,.16), 0 0 10px 2px var(--aura), 0 0 30px 6px var(--aura), 0 0 64px 10px var(--aura2);
+  }
+  .slide.sponsor[data-metal=premier], .slide.sponsor[data-metal=gold]{--aura:rgba(228,164,62,.62);--aura2:rgba(244,190,96,.36)}
+  .slide.sponsor[data-metal=blue]  {--aura:rgba(74,112,206,.48);--aura2:rgba(108,142,222,.28)}
+  .slide.sponsor[data-metal=silver]{--aura:rgba(128,138,158,.55);--aura2:rgba(156,166,184,.30)}
   .sp-name{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:60px;line-height:1.1;color:var(--ink);margin-top:36px;text-wrap:balance;max-width:960px}
   .sp-name.solo{font-size:96px;margin-top:40px}
   .sp-note{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:33px;line-height:1.25;color:var(--ink-soft);margin-top:14px}
@@ -143,6 +152,10 @@
   }
   /* the highlight waits off to the left, sweeps across once, then rests off to the right */
   @keyframes glint{0%,58%{background-position:100% 0, 0 0}86%,100%{background-position:0% 0, 0 0}}
+  /* the shine restarts each time a page arrives, so it always crosses the script while you're looking:
+     about three seconds in, then every eleven seconds while the page stays up */
+  @keyframes glintOn{0%,58%{background-position:100% 0, 0 0}86%,100%{background-position:0% 0, 0 0}}
+  .slide.on .thanks, .title-page.on .tp-script{animation:glintOn 11s ease-in-out -3.6s infinite}
 
   .sub{
     font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;
@@ -155,7 +168,7 @@
   .sponsors{
     flex:1 1 auto;min-height:0;width:100%;
     display:flex;flex-direction:column;justify-content:flex-start;align-items:center;
-    gap:calc(40px * var(--s));
+    gap:calc(34px * var(--s));
   }
   .tier{display:flex;flex-direction:column;align-items:center;gap:calc(12px * var(--s));width:100%}
   .tier-label{
@@ -164,12 +177,17 @@
     font-size:calc(24px * var(--s));letter-spacing:.24em;padding-left:.24em;text-transform:uppercase;
     color:var(--lab,var(--gold-deep));
   }
-  .tier-label[data-metal=blue]{--lab:#2c4f94}
-  .tier-label[data-metal=silver]{--lab:#6a6e76}
-  .tier-label[data-metal=gold]{--lab:#8f6818}
-  .tier-label[data-metal=premier]{--lab:#8a5c1e
-  }
-  .tier-label::before,.tier-label::after{content:"";width:calc(34px * var(--s));height:1px;background:currentColor;opacity:.55}
+  .tier-label[data-metal=blue]{--lab:#2c4f94;--metal:linear-gradient(180deg,#4570c2 0%,#2a4d97 52%,#1d3a78 100%)}
+  .tier-label[data-metal=silver]{--lab:#6a6e76;--metal:linear-gradient(180deg,#8d939d 0%,#60656e 52%,#4b5058 100%)}
+  .tier-label[data-metal=gold]{--lab:#8f6818;--metal:linear-gradient(180deg,#b38a2c 0%,#8a6414 52%,#6d4d0a 100%)}
+  .tier-label[data-metal=premier]{--lab:#8a5c1e;--metal:linear-gradient(180deg,#ad7c2e 0%,#86581a 52%,#6a430f 100%)}
+  .tier-label::before,.tier-label::after{content:"";width:calc(34px * var(--s));height:1px;background:var(--lab,var(--gold-deep));opacity:.55}
+  /* the paid tiers read as engraved metal: bold small caps, a polished face, a hairline of light beneath */
+  .tier-label[data-metal]{font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700}
+  .tier-label[data-metal] .mt{background:var(--metal);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 1px 0 rgba(255,251,240,.95)) drop-shadow(0 3px 8px rgba(120,80,25,.14))}
+  .t0 .tier-label[data-metal]{font-size:calc(29px * var(--s))}
+  .t0 .name, .cell .name, .slide.sponsor.premium .sp-name{font-weight:700}
   .names{display:flex;flex-direction:column;align-items:center;gap:calc(16px * var(--s));width:100%}
   .line{display:flex;justify-content:center;align-items:center;white-space:nowrap}
   .name{
@@ -182,7 +200,7 @@
   .t0 .names::before{content:"";position:absolute;left:50%;top:50%;width:calc(600px * var(--s));height:calc(180px * var(--s));
     transform:translate(-50%,-50%);border-radius:50%;
     background:radial-gradient(closest-side,rgba(255,236,190,.85),rgba(255,236,190,0));pointer-events:none}
-  .t0 .name{--fs:132px;line-height:1.02;position:relative}
+  .t0 .name{--fs:140px;line-height:1.02;position:relative}
   .gild{
     display:inline-block;padding:0 .08em;letter-spacing:.02em;
     background:
@@ -198,19 +216,24 @@
   .cell{flex:none;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:calc(8px * var(--s));padding:0 calc(32px * var(--s))}
   .cell + .cell{box-shadow:inset 1px 0 0 rgba(185,134,52,.35)}
   .cell .tier-label::before,.cell .tier-label::after{display:none}
-  .cell .name{--fs:58px}
-  .cell .tier-label{font-size:calc(29px * var(--s));font-weight:600}
+  .cell .name{--fs:62px}
+  .cell .tier-label{font-size:calc(32px * var(--s))}
+  .tier.cells{position:relative}
+  .tier.cells::before{content:"";position:absolute;left:50%;top:50%;width:112%;height:190%;z-index:-1;
+    transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,238,198,.62),rgba(255,238,198,0))}
   /* list tiers */
   .t2 .name{--fs:39px}
+  .t2{gap:calc(22px * var(--s))}
+  .t2 .tier-label{font-size:calc(29px * var(--s));letter-spacing:.26em;padding-left:.26em}
+  [data-theme=midnight] .t2 .tier-label{--lab:#e6c684}
   .sep{
     width:calc(7px * var(--s));height:calc(7px * var(--s));margin:0 calc(22px * var(--s));flex:none;
     transform:rotate(45deg);
     background:linear-gradient(135deg,#f0d394,#a87428);
   }
 
-  /* Rotary lockup (designed 340 wide, scaled + placed by script) */
-  .host-pos{position:absolute;left:0;top:0;width:340px;transform-origin:0 0;visibility:hidden}
-  .host{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+  /* Rotary seal (title page + sponsor sign-off bar) */
   .seal{
     position:relative;width:156px;height:156px;border-radius:50%;flex:none;
     display:grid;place-items:center;
@@ -237,6 +260,44 @@
     font-size:25px;color:var(--gold-deep);margin-top:6px;
   }
 
+  /* ---------- title page (designed 1100 wide, scaled + placed by script on the message's axis) ---------- */
+  .title-page{position:absolute;left:0;top:0;width:1400px;transform-origin:0 0;visibility:hidden;
+    display:flex;flex-direction:column;align-items:center;text-align:center;color:var(--ink);
+    opacity:0;pointer-events:none;transition:opacity calc(var(--fade,1.8s) * .5) cubic-bezier(.4,0,.2,1)}
+  .title-page.on{opacity:1;transition:opacity calc(var(--fade,1.8s) * .8) cubic-bezier(.4,0,.2,1) calc(var(--fade,1.8s) * .35)}
+  .title-page::before{content:"";position:absolute;left:50%;top:46%;width:1400px;height:980px;z-index:-1;
+    transform:translate(-50%,-50%);pointer-events:none;
+    background:radial-gradient(closest-side, rgba(255,254,249,.95), rgba(255,254,249,0))}
+  .tp-kicker{
+    display:flex;align-items:center;gap:28px;white-space:nowrap;margin-bottom:30px;
+    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700;
+    font-size:30px;letter-spacing:.4em;color:var(--gold-deep);text-transform:uppercase;
+  }
+  .tp-kicker #tpArticle{margin-right:-.4em}   /* the trailing letter-space would pull the words off-centre */
+  .tp-kicker .rule,.tp-event .rule{width:80px;height:1px;flex:none;background:linear-gradient(90deg,rgba(185,134,52,0),rgba(185,134,52,.9))}
+  .tp-kicker .rule:last-child,.tp-event .rule:last-child{transform:scaleX(-1)}
+  .thanks.tp-script{font-size:184px;line-height:1;margin:-.26em 0 -.38em;padding:.3em .16em .4em;animation-delay:2.5s}
+  .tp-event{
+    display:flex;align-items:center;gap:30px;margin-top:20px;white-space:nowrap;
+    font-family:"Cormorant SC","Cormorant Garamond",Georgia,serif;font-weight:700;
+    font-size:44px;line-height:1;letter-spacing:.3em;color:var(--ink);text-transform:uppercase;
+  }
+  .tp-event #event{margin-right:-.3em}
+  .tp-event .rule{width:96px}
+  .title-page .ornament{margin:36px 0 40px}
+  /* the host, stacked on the centre line like the foot of an invitation */
+  .tp-host{display:flex;flex-direction:column;align-items:center;gap:40px}
+  .tp-host .seal{width:140px;height:140px}
+  .tp-host .seal img{width:112px;height:112px}
+  .tp-host .host-text{text-align:center}
+  .tp-host .host-kicker{font-size:24px;letter-spacing:.28em;padding-left:.28em;font-weight:700}
+  .tp-host .host-name{font-size:45px;margin-top:6px;white-space:nowrap}
+  .tp-host .motto{font-size:32px;margin-top:16px}
+  [data-theme=midnight] .title-page::before{background:radial-gradient(closest-side, rgba(255,196,120,.03), rgba(255,196,120,0))}
+  /* the title page's gold lines read a shade brighter after dark */
+  [data-theme=midnight] .tp-kicker, [data-theme=midnight] .tp-host .host-kicker, [data-theme=midnight] .tp-host .motto{color:#ebcd8e}
+  [data-theme=midnight] .tp-kicker .rule,[data-theme=midnight] .tp-event .rule{background:linear-gradient(90deg,rgba(216,178,110,0),rgba(216,178,110,.85))}
+
   /* ---------- entrance ---------- */
   /* Everything moves on opacity + transform only (GPU-composited, smooth on TV hardware),
      with long, gentle ease-out curves. Nothing starts until fonts + art are ready (.go). */
@@ -247,7 +308,7 @@
   .thanks{animation-delay:5s}
 
   .measuring .chunk{transform:none !important}
-  .webkit .thanks, .webkit .gild{filter:none !important}
+  .webkit .thanks, .webkit .gild, .webkit .tier-label .mt{filter:none !important}
   .still *, .still .glow{animation:none !important;transition:none !important}
   .still .veil{display:none}
   .still .ornament path,.still .ornament line{stroke-dashoffset:0}
@@ -260,7 +321,7 @@
   [data-theme=midnight] body{background:#000}
   [data-theme=midnight] .bg, [data-theme=midnight] .veil{
     background:
-      radial-gradient(ellipse 62% 46% at 50% 0%, rgba(255,184,92,.17), rgba(255,184,92,0) 70%),
+      radial-gradient(ellipse 62% 46% at 50% 0%, rgba(255,184,92,.10), rgba(255,184,92,0) 70%),
       radial-gradient(ellipse 38% 48% at 9% 90%, rgba(255,168,78,.15), rgba(255,168,78,0) 70%),
       radial-gradient(ellipse 72% 80% at 50% 50%, rgba(0,0,0,0) 48%, rgba(0,0,0,.5) 100%),
       linear-gradient(180deg, #131729 0%, #0e1122 45%, #0c0d19 75%, #120d0e 100%);
@@ -268,14 +329,21 @@
   [data-theme=midnight] .grain{opacity:.085}
   [data-theme=midnight] .garland > img{filter:brightness(.86) saturate(1.04)}
   [data-theme=midnight] .couple > img{filter:brightness(.9) saturate(1.02)}
-  [data-theme=midnight] .halo{background:radial-gradient(closest-side, rgba(255,186,100,.24), rgba(255,186,100,0))}
-  [data-theme=midnight] .glow{background:radial-gradient(closest-side, rgba(255,200,120,.32), rgba(255,200,120,0))}
-  [data-theme=midnight] .couple .halo{background:radial-gradient(closest-side, rgba(255,170,84,.26), rgba(255,170,84,0))}
-  [data-theme=midnight] .content::before{background:radial-gradient(closest-side, rgba(255,196,120,.07), rgba(255,196,120,0))}
+  [data-theme=midnight] .halo{background:radial-gradient(closest-side, rgba(255,186,100,.12), rgba(255,186,100,0))}
+  [data-theme=midnight] .glow{background:radial-gradient(closest-side, rgba(255,200,120,.20), rgba(255,200,120,0))}
+  [data-theme=midnight] .couple .halo{background:radial-gradient(closest-side, rgba(255,170,84,.15), rgba(255,170,84,0))}
+  [data-theme=midnight] .content::before{background:radial-gradient(closest-side, rgba(255,196,120,.03), rgba(255,196,120,0))}
   [data-theme=midnight] .plaque{
     box-shadow:0 0 0 1.5px #d9b46c, 0 0 0 6px rgba(20,22,36,.9), 0 0 0 7.5px rgba(216,178,110,.8),
                0 24px 60px rgba(0,0,0,.5), 0 0 90px rgba(255,186,96,.26);
   }
+  [data-theme=midnight] .slide.sponsor[data-metal] .plaque{
+    box-shadow:0 0 0 1.5px #d9b46c, 0 0 0 6px rgba(20,22,36,.9), 0 0 0 7.5px rgba(216,178,110,.8),
+               0 24px 60px rgba(0,0,0,.5), 0 0 10px 2px var(--aura), 0 0 30px 6px var(--aura), 0 0 64px 10px var(--aura2);
+  }
+  [data-theme=midnight] .slide.sponsor[data-metal=premier], [data-theme=midnight] .slide.sponsor[data-metal=gold]{--aura:rgba(255,198,106,.70);--aura2:rgba(255,184,90,.34)}
+  [data-theme=midnight] .slide.sponsor[data-metal=blue]  {--aura:rgba(132,164,240,.66);--aura2:rgba(120,152,230,.30)}
+  [data-theme=midnight] .slide.sponsor[data-metal=silver]{--aura:rgba(226,232,244,.58);--aura2:rgba(214,220,232,.24)}
   [data-theme=midnight] .overline .rule{background:linear-gradient(90deg,rgba(216,178,110,0),rgba(216,178,110,.85))}
   [data-theme=midnight] .thanks{
     background:
@@ -294,11 +362,13 @@
     filter:drop-shadow(0 2px 2px rgba(0,0,0,.45)) drop-shadow(0 0 18px rgba(255,178,80,.2));
   }
   [data-theme=midnight] .t0 .names::before{background:radial-gradient(closest-side,rgba(255,190,100,.16),rgba(255,190,100,0))}
+  [data-theme=midnight] .tier.cells::before{background:radial-gradient(closest-side,rgba(255,190,100,.10),rgba(255,190,100,0))}
   [data-theme=midnight] .cell + .cell{box-shadow:inset 1px 0 0 rgba(216,178,110,.3)}
-  [data-theme=midnight] .tier-label[data-metal=blue]{--lab:#93abe6}
-  [data-theme=midnight] .tier-label[data-metal=silver]{--lab:#c3c8d2}
-  [data-theme=midnight] .tier-label[data-metal=gold]{--lab:#f2c75c}
-  [data-theme=midnight] .tier-label[data-metal=premier]{--lab:#e0bb76}
+  [data-theme=midnight] .tier-label[data-metal=blue]{--lab:#93abe6;--metal:linear-gradient(180deg,#c9d7fb 0%,#97b0ec 52%,#7391d8 100%)}
+  [data-theme=midnight] .tier-label[data-metal=silver]{--lab:#c3c8d2;--metal:linear-gradient(180deg,#f4f6fa 0%,#c8cdd6 52%,#a2a8b3 100%)}
+  [data-theme=midnight] .tier-label[data-metal=gold]{--lab:#f2c75c;--metal:linear-gradient(180deg,#fbe39e 0%,#efc35a 52%,#c9953a 100%)}
+  [data-theme=midnight] .tier-label[data-metal=premier]{--lab:#e0bb76;--metal:linear-gradient(180deg,#f6dc9c 0%,#e0b468 52%,#bd8b40 100%)}
+  [data-theme=midnight] .tier-label[data-metal] .mt{filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.5)) drop-shadow(0 0 10px rgba(255,190,100,.12))}
   [data-theme=midnight] .seal{
     background:radial-gradient(circle at 40% 35%, #fdf6e6 0%, #f1e2c2 62%, #e2cb9c 100%);
     box-shadow:
@@ -404,9 +474,8 @@
   <canvas class="layer" id="fx"></canvas>
 
   <main class="content" id="content">
-   <section class="slide overview on" id="overview">
-    <div class="overline chunk"><span class="rule"></span><span id="event"></span><span class="rule"></span></div>
-    <h1 class="thanks chunk">Thank You</h1>
+   <section class="slide overview" id="overview">
+    <h2 class="thanks chunk">Thank You</h2>
     <p class="sub chunk" id="message"></p>
     <svg class="ornament chunk" viewBox="0 0 380 34" aria-hidden="true">
       <defs>
@@ -429,16 +498,26 @@
    </section>
   </main>
 
-  <div class="host-pos" id="hostPos">
-    <aside class="host chunk" id="host">
+  <section class="title-page on" id="titlePage">
+    <div class="tp-kicker" id="tpArticleRow"><span class="rule"></span><span id="tpArticle"></span><span class="rule"></span></div>
+    <h1 class="thanks tp-script" id="tpTitle"></h1>
+    <div class="tp-event"><span class="rule"></span><span id="event"></span><span class="rule"></span></div>
+    <svg class="ornament" viewBox="0 0 380 34" aria-hidden="true">
+      <line x1="10" y1="17" x2="150" y2="17" stroke="url(#og)" stroke-width="1.2"/>
+      <line x1="370" y1="17" x2="230" y2="17" stroke="url(#og)" stroke-width="1.2"/>
+      <path d="M150 17 C160 17 162 8 170 9 C176 10 175 17 170 17" fill="none" stroke="#b98634" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M230 17 C220 17 218 26 210 25 C204 24 205 17 210 17" fill="none" stroke="#b98634" stroke-width="1.2" stroke-linecap="round"/>
+      <path class="heart" d="M190 26 C182 20 177 16 177 11.5 C177 8 180 6 183 6 C186 6 188.5 8 190 10.5 C191.5 8 194 6 197 6 C200 6 203 8 203 11.5 C203 16 198 20 190 26 Z" fill="url(#hg)"/>
+    </svg>
+    <div class="tp-host">
       <div class="seal"><img id="logo" alt="Rotary International"></div>
       <div class="host-text">
         <div class="host-kicker" id="hostKicker"></div>
         <div class="host-name" id="hostName"></div>
         <div class="motto" id="motto"></div>
       </div>
-    </aside>
-  </div>
+    </div>
+  </section>
 
   <div class="host-bar" id="hostBar" aria-hidden="true">
     <div class="seal"><img id="logoBar" alt=""></div>
@@ -527,6 +606,14 @@ const ASSETS = {
   $('topArt').src    = ASSETS.top;
   $('coupleArt').src = COUPLES[0].src;
   $('logo').src      = ASSETS.logo;
+  // title page: "Welcome to" + "The Enchanted Evening" → "WELCOME TO THE" in spaced capitals above the
+  // script line "Enchanted Evening"; the event name beneath
+  const fullTitle = (BANNER.title || 'The Enchanted Evening').trim();
+  const art = fullTitle.match(/^(the|an|a)\s+(.+)$/i);
+  const kick = [(BANNER.welcome || '').trim(), art ? art[1] : ''].filter(Boolean).join(' ');
+  $('tpArticle').textContent  = kick;
+  if (!kick) $('tpArticleRow').style.display = 'none';
+  $('tpTitle').textContent    = art ? art[2] : fullTitle;
   $('event').textContent      = BANNER.event;
   $('message').textContent    = BANNER.message;
   $('hostKicker').textContent = BANNER.hostKicker;
@@ -547,7 +634,8 @@ const ASSETS = {
     const lab = document.createElement('div');
     lab.className = 'tier-label';
     const m = metal(text); if (m) lab.dataset.metal = m;
-    lab.textContent = text; return lab;
+    const mt = document.createElement('span'); mt.className = 'mt'; mt.textContent = text;
+    lab.appendChild(mt); return lab;
   };
   // normalise the config: each tier gets .names for the overview and .sponsors for the slides
   const tiers = (BANNER.tiers || BANNER.sponsors || []).map((t, i) => {
@@ -624,8 +712,8 @@ const ASSETS = {
     // then ease the headline down, and only then shrink the names further
     let s = .82, h = .74;
     const apply = () => { stage.style.setProperty('--s', s); stage.style.setProperty('--h', h); rows.forEach(layoutRow); };
-    const need  = () => [...box.children].reduce((t, c) => t + c.offsetHeight, 0) + (box.children.length - 1) * 40 * s;
-    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : c.classList.contains('cells') ? 1.3 : 1.15) + 1);
+    const need  = () => [...box.children].reduce((t, c) => t + c.offsetHeight, 0) + (box.children.length - 1) * 34 * s;
+    const fits  = () => need() <= box.clientHeight && [...box.children].every(c => c.scrollWidth <= box.clientWidth * (c.classList.contains('t0') ? 1 : c.classList.contains('cells') ? 1.5 : 1.15) + 1);
     for (h of [.74, .66, .58]){
       s = .82; apply();
       while (!fits() && s > .7){ s -= .03; apply(); }
@@ -679,7 +767,7 @@ const ASSETS = {
   let OV = null, SP = null;
   // the column moves between its overview frame and the sponsor frame as the show advances
   function applyFrame(){
-    const f = (slides[cur] && slides[cur].el !== overview) ? SP : OV;
+    const f = (slides[cur] && frameOf(slides[cur].el) === 's') ? SP : OV;
     if (f) content.style.transform = `translate(${f.left}px, ${f.top}px) scale(${f.c})`;
   }
   function place(){
@@ -705,9 +793,12 @@ const ASSETS = {
 
     // message column
     const crestCol = PAINTINGS && COUPLES[coupleIx].crestAt != null ? COUPLES[coupleIx].crestAt * cw + 190 * k : 0;
-    const xL0 = portrait ? 24 * k : PAINTINGS ? cw - 10 * k : CREST_X + 230 * k;
-    const xR0 = portrait ? W - 24 * k : PAINTINGS ? W - 120 * k : W - 110 * k;
-    const bottom = portrait ? H - ch - 12 * k : H - 38 * k;
+    // the Thank You page has the stage to itself now (the painting stays on the title page), so it centres,
+    // and finishes above the Rotary footer
+    const xL0 = portrait ? 24 * k : 110 * k;
+    const xR0 = portrait ? W - 24 * k : W - 110 * k;
+    const floorY = H - 126 * k;                        // the Rotary footer below
+    const bottom = portrait ? H - ch - 12 * k : floorY;
     const gap = 14 * Math.max(k, .4);
     const hang = 0;                                // text sits just below the vine tips, never under them
     // widest line (the shared sponsor row may reach past the 1040px column)
@@ -716,7 +807,7 @@ const ASSETS = {
     let c, left, rt, top, xL = xL0, xR = xR0;
     // try a few horizontal positions and keep the one that lets the column sit highest
     let bestPos = null;
-    for (const shift of (portrait || !PAINTINGS ? [0] : [0, -40, -80, -120, 40])){
+    for (const shift of [0]){
       xL = xL0 + shift; xR = xR0 + shift;
     c = Math.min((xR - xL) / 1040, (xR - xL + overhang) / (maxX - minX), k * 1.12); left = 0; rt = 0; top = 0;
     for (let i = 0; i < 60; i++){
@@ -741,7 +832,6 @@ const ASSETS = {
       sponsorH = Math.min(860, Math.max(400, ...sps.map(sl => sl.scrollHeight || 0).filter(v => isFinite(v))));
       sps.forEach(sl => sl.style.height = sponsorH + 'px');
       let sc = Math.min((sxR - sxL) / 1040, 1.25 * k), sleft, stop;
-      const floorY = H - 126 * k;                      // leave room for the Rotary sign-off bar
       for (let i = 0; i < 60; i++){
         sleft = (sxL + sxR) / 2 - 520 * sc;
         stop = Math.max(40 * k, vinesBelow(sleft + 180 * sc, sleft + 860 * sc) + gap * .5);
@@ -752,66 +842,57 @@ const ASSETS = {
       if (!isFinite(stop) || !isFinite(sc) || !isFinite(sleft)){ sc = .85; sleft = W / 2 - 520 * sc; stop = 200; }
       SP = {left: sleft, top: stop, c: sc};
     } else SP = OV;
-    // the sign-off bar centres on the message column on the overview, and on the whole stage on sponsor slides
-    const bar = $('hostBar');
-    bar.style.setProperty('--ov-left', (PAINTINGS && !portrait ? xL : 0) + 'px');
     applyFrame();
     content.style.visibility = 'visible';
 
-    // Rotary seal
-    const hp = $('hostPos'), hh = hp.offsetHeight;
-    let hs, hx, hy;
-    if (portrait){
-      // beside dad's shoulder
-      const room = W - cw - 16 * k;
-      hs = Math.min(room / 340, ch * .9 / hh, k * 1.1);
-      hx = cw + (room - 340 * hs) / 2 + 8 * k;
-      hy = H - ch + (ch - hh * hs) / 2;
-    } else {
-      // floating above the father & daughter, centred on the "Thank You" line when it can be:
-      // try spots from over dad's head toward the message, keep the largest size that stays
-      // clear of the vines and the text, and the closest to that centre line
-      const placed = shapes.map(sh => ({x0: left + sh.x0 * c, y0: top + sh.y0 * c, y1: top + sh.y1 * c}));
-      const th = shapes.find(sh => sh.tag === 'thanks');
-      // with the paintings the crest lines up with "Thank You"; without them it balances the whole message
-      const mid = PAINTINGS ? top + (th.y0 + th.y1) / 2 * c : top + (Math.min(...shapes.map(s => s.y0)) + Math.max(...shapes.map(s => s.y1))) / 2 * c;
-      const home = PAINTINGS ? (COUPLES[coupleIx].crestAt != null ? COUPLES[coupleIx].crestAt : .78) * cw : CREST_X;   // crestAt: where (0–1 across the painting) the crest sits best
-      // highest point of the painted figures over a horizontal span (screen px)
-      const topUnder = (x0, x1) => {
-        const cp = COUPLES[coupleIx];
-        if (!PAINTINGS || !cp.top) return headTop;
-        const a = Math.max(0, Math.floor(x0 / q / 16)), b = Math.min(cp.top.length - 1, Math.floor(x1 / q / 16));
-        if (a > b) return H;
-        let m = Infinity; for (let i = a; i <= b; i++) m = Math.min(m, cp.top[i]);
-        return H + sink - ch + m * q;
-      };
-      let best = null;
-      const pinned = PAINTINGS && COUPLES[coupleIx].crestAt != null;   // a painting that names its crest spot keeps the crest there
-      for (let f = 0; f <= (PAINTINGS && !pinned ? 1.0001 : 0); f += .05){
-        const cx = home + f * (xL + 60 * k - home);
-        let z = PAINTINGS ? (pinned ? 1.06 * k : k) : 1.15 * k, x, y, ok = false;   // a touch larger when it has the column to itself
-        for (let i = 0; i < 50 && z > .35 * k && !ok; i++){
-          x = cx - 170 * z;
-          const floor = topUnder(x, x + 340 * z) - (pinned ? 10 : 24) * k - hh * z;   // just above the tallest head under the crest
-          const ceil  = vinesBelow(x, x + 340 * z) + gap - (pinned ? 90 * k : 0);   // …or lifted; the seal may tuck a little under the leaf tips
-          const want = pinned ? Math.max(ceil, mid - hh * z / 2 + 46 * k) : mid - hh * z / 2, ys = [];
-          for (let yy = floor; yy >= ceil - .5; yy -= 6 * k) ys.push(yy);
-          if (ceil <= floor) ys.push(Math.min(floor, Math.max(ceil, want)));
-          ys.sort((a, b) => Math.abs(a - want) - Math.abs(b - want));
-          if (x >= 8 * k) for (const yy of ys){
-            if (placed.every(p => p.y1 < yy || p.y0 > yy + hh * z || x + 340 * z <= p.x0 - 40 * k) && (!pinned || x + 340 * z <= xL + 200 * k)){ y = yy; ok = true; break; }
-          }
-          if (!ok) z *= .97;
-        }
-        const off = ok ? Math.abs(y + hh * z / 2 - mid) + .8 * Math.abs(cx - home) : 0;
-        if (ok && (!best || z > best.z * 1.04 || (z > best.z * .96 && off < best.off - 4))) best = {z, x, y, off};
+    // highest point of the painted figures over a horizontal span (screen px)
+    const topUnder = (x0, x1) => {
+      const cp = COUPLES[coupleIx];
+      if (!PAINTINGS) return H;
+      if (!cp.top) return x0 < cw ? headTop : H;
+      const a = Math.max(0, Math.floor(x0 / q / 16)), b = Math.min(cp.top.length - 1, Math.floor(x1 / q / 16));
+      if (a > b) return H;
+      let m = Infinity; for (let i = a; i <= b; i++) m = Math.min(m, cp.top[i]);
+      return H + sink - ch + m * q;
+    };
+
+    // title page: on the centre line of the stage, as large as the room allows, clear of the vines and the painting,
+    // and sitting a little above the middle of the space that is left
+    const tp = $('titlePage');
+    const tshapes = [];
+    for (const el of tp.children){
+      if (el.tagName === 'svg' || getComputedStyle(el).display === 'none') continue;
+      const box = el.classList.contains('tp-host') ? [...el.querySelectorAll('.seal, .host-kicker, .host-name, .motto')] : [el];
+      for (const b of box){
+        const tr = tp.getBoundingClientRect(), br = b.getBoundingClientRect(), sc0 = tr.width / tp.offsetWidth || 1;
+        let x0 = (br.left - tr.left) / sc0, y0 = (br.top - tr.top) / sc0, w = br.width / sc0, h = br.height / sc0;
+        if (b.classList.contains('thanks')){ const cs = getComputedStyle(b), fz = parseFloat(cs.fontSize);
+          x0 += parseFloat(cs.paddingLeft) * .8; w -= parseFloat(cs.paddingLeft) * 1.6;
+          y0 += parseFloat(cs.paddingTop) + fz * .1; h -= parseFloat(cs.paddingTop) + fz * .1 + parseFloat(cs.paddingBottom) * .9; }
+        tshapes.push({x0, x1: x0 + w, y0, y1: y0 + h});
       }
-      if (!best){ const z = .5 * k; best = {z, x: home - 170 * z, y: headTop - 24 * k - hh * z}; }
-      if (!pinned) best.x -= 36 * k;   // sit a touch further left so the lockup owns its own column
-      hs = best.z; hx = best.x; hy = best.y;
     }
-    hp.style.transform = `translate(${hx}px, ${hy}px) scale(${hs})`;
-    hp.style.visibility = 'visible';
+    const TW = 1400, tpH = Math.max(...tshapes.map(sh => sh.y1)), tpY0 = Math.min(...tshapes.map(sh => sh.y0));
+    const axis0 = W / 2;
+    const tBottom = H - 44 * k;
+    let bestT = null;
+    for (const shift of [0]){
+      const ax = axis0 + shift;
+      let s = k, L = 0, yT = 0;
+      for (let i = 0; i < 80; i++){
+        L = ax - TW / 2 * s;
+        let rtT = -Infinity;
+        for (const sh of tshapes) rtT = Math.max(rtT, vinesBelow(L + sh.x0 * s, L + sh.x1 * s) + gap * 2.2 - sh.y0 * s);
+        const room = tBottom - rtT - tpH * s;
+        yT = rtT + Math.max(0, room) * .2;
+        const clear = tshapes.every(sh => yT + sh.y1 * s <= topUnder(L + sh.x0 * s, L + sh.x1 * s) - 26 * k);
+        if (room >= 0 && clear) break;
+        s *= .985;
+      }
+      if (!bestT || s > bestT.s * 1.01) bestT = {L, y: yT, s};
+    }
+    tp.style.transform = `translate(${bestT.L}px, ${bestT.y}px) scale(${bestT.s})`;
+    tp.style.visibility = 'visible';
 
     sizeViewportCanvases(W, H);
     if (!ANIMATE) requestAnimationFrame(draw);
@@ -891,9 +972,9 @@ const ASSETS = {
     const q = Math.min(DPR, 1920 / W, 1080 / H, 1.5);
     for (const cv of [bkC, fxC]){ cv.width = Math.round(W * q); cv.height = Math.round(H * q); }
   }
-  const orbs  = Array.from({length:14}, () => ({x:rnd(.2,.88), y:rnd(.22,.83), r:rnd(40,110), a:rnd(.12,.3), vx:rnd(-.002,.002), vy:rnd(-.003,.003), p:rnd(0,6.28)}));
-  const newMote = anyY => ({x:rnd(0,1), y:anyY?rnd(0,1):rnd(1.0,1.05), r:rnd(2.5,7), vy:rnd(.006,.015), sw:rnd(10,30), sp:rnd(.2,.6), p:rnd(0,6.28), a:rnd(.25,.6)});
-  const motes = Array.from({length:46}, () => newMote(true));
+  const orbs  = Array.from({length:4}, () => ({x:rnd(.2,.88), y:rnd(.22,.83), r:rnd(36,80), a:rnd(.035,.075), vx:rnd(-.002,.002), vy:rnd(-.003,.003), p:rnd(0,6.28)}));
+  const newMote = anyY => ({x:rnd(0,1), y:anyY?rnd(0,1):rnd(1.0,1.05), r:rnd(2.5,7), vy:rnd(.006,.015), sw:rnd(10,30), sp:rnd(.2,.6), p:rnd(0,6.28), a:rnd(.3,.66)});
+  const motes = Array.from({length:58}, () => newMote(true));
 
   const gDm = $('gDim').getContext('2d'), gBl = $('gBloom').getContext('2d'), gFx = $('gFx').getContext('2d');
   const cDm = $('cDim').getContext('2d'), cBl = $('cBloom').getContext('2d');
@@ -1024,10 +1105,19 @@ const ASSETS = {
                                tier: 'With sincere thanks for your generous support',
                                general: 'With sincere thanks for your generous support'}, BANNER.notes || {});
   root.style.setProperty('--fade', T.fade + 's');
-  const slides = [{el: overview, secs: T.overview, label: 'Overview'}];
+  if (!T.title) T.title = 12;
+  const titlePage = $('titlePage');
+  const slides = [{el: titlePage, secs: T.title, label: 'Title'}, {el: overview, secs: T.overview, label: 'Thank You'}];
+  // the garland runs through everything; the painting belongs to the title page, the Rotary footer to every page after it,
+  // and the message column has one frame for the Thank You page and one for the sponsors
+  const hasPaint = el => el === titlePage;
+  const hasBar   = el => el !== titlePage;
+  const frameOf  = el => el === titlePage ? 't' : el === overview ? 'o' : 's';
+  const sceneFor = el => { stage.classList.toggle('hide-couple', !hasPaint(el)); stage.classList.toggle('show-bar', hasBar(el)); };
   const logoLoads = [];
   for (const t of tiers) for (const sp of t.sponsors){
-    const el = document.createElement('section'); el.className = 'slide sponsor';
+    const el = document.createElement('section'); el.className = 'slide sponsor' + (t.kind !== 'general' ? ' premium' : '');
+    if (t.kind !== 'general' && metal(t.tier || '')) el.dataset.metal = metal(t.tier);
     const h = document.createElement('h2'); h.className = 'thanks'; h.textContent = 'Thank You'; el.appendChild(h);
     const body = document.createElement('div'); body.className = 'sp-body'; el.appendChild(body);
     if (t.tier){ const lab = label(t.tier.replace(/s$/i, '')); body.appendChild(lab); }   // the tier introduces the logo
@@ -1070,26 +1160,28 @@ const ASSETS = {
   function show(i){
     i = (i + slides.length) % slides.length;
     const from = slides[cur].el, to = slides[i].el;
-    const loopDone = i === 0 && from !== overview;               // a full loop just finished
+    const loopDone = i === 0 && frameOf(from) === 's';           // a full loop just finished
     if (loopDone) preloadNextCouple();
     from.classList.remove('on'); cur = i;
     // the column only changes position once the outgoing slide has cleared, so nothing visible moves
-    const moveFrames = (from === overview) !== (to === overview);
+    const moveFrames = frameOf(from) !== frameOf(to);
     clearTimeout(frameT);
     const arrive = () => {
       if (loopDone) swapCouple();                                 // new painting, while it is still invisible
       applyFrame();
-      stage.classList.toggle('sp', to !== overview);
+      sceneFor(to);
       to.classList.add('on');
     };
     if (moveFrames && RUN){
-      if (from === overview) stage.classList.add('sp');          // painting + crest leave with the overview
+      // whatever the next page doesn't have leaves together with the outgoing page; what it adds arrives with it
+      if (!hasPaint(to)) stage.classList.add('hide-couple');
+      if (!hasBar(to)) stage.classList.remove('show-bar');
       frameT = setTimeout(arrive, T.fade * 500);
     } else arrive();
     schedule();
     status();
   }
-  // a different father & daughter each time the show comes back round to the overview:
+  // a different father & daughter each time the show comes back round to the title page:
   // the next painting is fetched while the last sponsor slide fades, then swapped in while hidden
   let pre = null;
   function preloadNextCouple(){
@@ -1148,7 +1240,7 @@ const ASSETS = {
     fitSponsors(); flattenNames(); measure(); place(); snugShortLogos();
     if (ANIMATE) requestAnimationFrame(draw);
     const start = parseInt(qs.get('slide') || '0', 10) || 0;
-    if (start) { slides[0].el.classList.remove('on'); cur = start % slides.length; slides[cur].el.classList.add('on'); applyFrame(); stage.classList.toggle('sp', cur !== 0); }
+    if (start) { slides[0].el.classList.remove('on'); cur = start % slides.length; slides[cur].el.classList.add('on'); applyFrame(); sceneFor(slides[cur].el); }
     requestAnimationFrame(() => requestAnimationFrame(() => { stage.classList.add('go'); schedule(); status(); }));
   });
 })();
@@ -1160,6 +1252,8 @@ const ASSETS = {
   @font-face{font-family:'Cormorant Garamond';font-weight:600;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-garamond-600.woff2) format('woff2')}
   @font-face{font-family:'Cormorant Garamond';font-weight:500;font-style:italic;font-display:block;src:url(assets/fonts/cormorant-garamond-500-italic.woff2) format('woff2')}
   @font-face{font-family:'Cormorant SC';font-weight:600;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-sc-600.woff2) format('woff2')}
+  @font-face{font-family:'Cormorant Garamond';font-weight:700;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-garamond-700.woff2) format('woff2')}
+  @font-face{font-family:'Cormorant SC';font-weight:700;font-style:normal;font-display:block;src:url(assets/fonts/cormorant-sc-700.woff2) format('woff2')}
 </style>
 </body>
 </html>
