@@ -102,7 +102,7 @@ const BANNER = {
         { name: "Bassani Tech",                        logo: "logos/bassani-tech.png", tile: "#140b0e", thanksShift: 38 },
         { name: "Spallumcheen Golf & Country Club",    logo: "logos/spallumcheen-golf.png" },
         { name: "Vernon Lock & Security Solutions",    logo: "logos/vernon-lock-security.png", size: 1.10 },
-        { name: "Mud Ace Slinger Drywall Services",    logo: "logos/mud-ace-slinger.png", size: 1.18 },
+        { name: "Mud Slinger Drywall Services",    logo: "logos/mud-ace-slinger.png", size: 1.18 },
     ]},
   ],
 };
