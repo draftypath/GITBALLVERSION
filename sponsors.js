@@ -62,7 +62,7 @@ const BANNER = {
   paintings: true,
 
   hostKicker: "Proudly hosted by",
-  host:       "Vernon SilverStar Rotary Club",
+  host:       "Vernon Silver Star Rotary Club",
   motto:      "Service Above Self",
 
   // seconds each slide stays up, and how long the cross-fade takes.
