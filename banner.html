@@ -105,6 +105,7 @@
   /* the status sits beneath the logo like a caption, then the thank-you line */
   .sp-body .tier-label{order:2}
   .sp-body .sp-note{order:3}
+  .slide.sponsor .sp-note{display:none}   /* the logo and its status say it; the room goes to the logo */
   .slide.sponsor .sp-body .tier-label{margin:36px 0 0}
   .slide.sponsor .sp-body .sp-note{margin-top:20px}
   .slide.sponsor .tier-label{font-size:32px}
@@ -1156,6 +1157,7 @@ const ASSETS = {
     const el = document.createElement('section'); el.className = 'slide sponsor' + (t.kind !== 'general' ? ' premium' : '');
     if (t.kind !== 'general' && metal(t.tier || '')) el.dataset.metal = metal(t.tier);
     const h = document.createElement('h2'); h.className = 'thanks'; h.textContent = 'Thank You'; el.appendChild(h);
+    if (sp.thanksShift) h.style.transform = `translateY(${+sp.thanksShift}px)`;
     const body = document.createElement('div'); body.className = 'sp-body'; el.appendChild(body);
     if (t.tier){ const lab = label(t.tier.replace(/s$/i, '')); body.appendChild(lab); }   // the tier introduces the logo
     if (sp.logo){
@@ -1164,15 +1166,18 @@ const ASSETS = {
       if (sp.tile) pl.style.background = sp.tile;
       const big = t.kind === 'premier';
       const grow = Math.min(1.3, Math.max(.6, +sp.size || 1));     // optional per-sponsor "size" in sponsors.js
-      const maxW = (big ? 1060 : 990) * grow, maxH = (big ? 470 : 435) * grow;   // the logo is the slide: no printed name beneath it
+      // every card may be as tall as the slide allows (the height the tallest card already uses, so nothing else
+      // shrinks); wide wordmarks may also run much wider, so each logo fills the room its shape leaves it
+      const OUTER_H = 656, maxW = Math.min(1650, 1450 * grow), maxH = OUTER_H;
       // a sensible card before the logo arrives, so nothing can ever size itself to a raw 1400px image
       pl.style.width = maxW * .8 + 'px'; pl.style.height = maxH * .8 + 'px'; pl.style.padding = '30px';
       const fit = () => {
         const nw = img.naturalWidth, nh = img.naturalHeight;
         if (!(nw > 0 && nh > 0)) return false;
         // the card takes the logo's own proportions, inside a sensible maximum
-        const k = Math.min(maxW / nw, maxH / nh), w = nw * k, hgt = nh * k;
-        const pad = sp.tile ? 0 : Math.max(22, Math.min(44, .09 * Math.max(w, hgt)));
+        const square = nw / nh < 1.25;
+        const pad = sp.tile ? 0 : square ? 28 : 44;              // square logos get a slimmer margin so they read larger
+        const k = Math.min((maxW - 2 * pad) / nw, (OUTER_H - 2 * pad) / nh), w = nw * k, hgt = nh * k;
         pl.style.width = (w + 2 * pad) + 'px'; pl.style.height = (hgt + 2 * pad) + 'px'; pl.style.padding = pad + 'px';
         return true;
       };
