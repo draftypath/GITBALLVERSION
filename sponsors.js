@@ -82,7 +82,7 @@ const BANNER = {
         { name: "A&W", logo: "logos/aw.png" },
     ]},
     { tier: "Gold Sponsor", sponsors: [
-        { name: "Nixon Wenger LLP", logo: "logos/nixon-wenger.png", size: 1.22 },
+        { name: "Nixon Wenger LLP", logo: "logos/nixon-wenger.png", size: 1.22, thanksShift: 42 },
     ]},
     { tier: "Royal Blue Sponsor", sponsors: [
         { name: "The Emily Dahl Foundation", logo: "logos/emily-dahl-foundation.png" },
@@ -99,8 +99,10 @@ const BANNER = {
         { name: "Cotton’s Chocolates",            logo: "logos/cottons-chocolates.png", tile: "#26150e" },
         { name: "Hadwin’s HVAC, Plumbing & Electrical", logo: "logos/hadwins.png", size: 1.16 },
         { name: "Nixon Earthworks",                    logo: "logos/nixon-earthworks.png" },
-        { name: "Bassani Tech",                        logo: "logos/bassani-tech.png", tile: "#140b0e" },
+        { name: "Bassani Tech",                        logo: "logos/bassani-tech.png", tile: "#140b0e", thanksShift: 38 },
         { name: "Spallumcheen Golf & Country Club",    logo: "logos/spallumcheen-golf.png" },
+        { name: "Vernon Lock & Security Solutions",    logo: "logos/vernon-lock-security.png", size: 1.10 },
+        { name: "Mud Ace Slinger Drywall Services",    logo: "logos/mud-ace-slinger.png", size: 1.18 },
     ]},
   ],
 };
